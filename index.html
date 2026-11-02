@@ -417,7 +417,7 @@ const defs=()=>({name:'Iñaki',pos:HOME,flights:[],visited:[HOME],plan:null,flig
  prefs:{screen:'auto',fast:false,focus:true,sound:'cabina',vol:.6,map:'noche'},layout:{order:['bars','reasons','map','streak','week','punct'],hidden:[]}});
 let S;try{S=Object.assign(defs(),JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){S=defs()}
 S.prefs=Object.assign(defs().prefs,S.prefs||{});S.layout=Object.assign(defs().layout,S.layout||{});
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(S.prefs.cloud){clearTimeout(save.t);save.t=setTimeout(()=>cloudSave(),3000)}}
 const landed=()=>S.flights.filter(f=>f.res==='landed');
 function streak(){const days=new Set(landed().map(f=>dayKey(f.ts)));let n=0,d=new Date();if(!days.has(dayKey(d)))d.setDate(d.getDate()-1);while(days.has(dayKey(d))){n++;d.setDate(d.getDate()-1)}return n}
 const totalKm=()=>landed().reduce((a,f)=>a+f.km,0),totalMin=()=>landed().reduce((a,f)=>a+f.dur,0);
@@ -871,7 +871,8 @@ function profRender(){const pg=$('#pf-page'),L=landed(),m=totalMin(),km=totalKm(
   <div class="row"><div class="tx"><b>Vuelo rápido</b><span>Para probar: 1 hora pasa en 1 minuto</span></div><div class="sw ${pr.fast?'on':''}" id="pf-fast"></div></div>
   <div class="row"><div class="tx"><b>Modo Concentración</b><span>Se activa al embarcar con un atajo de iOS</span></div><div class="sw ${pr.focus?'on':''}" id="pf-focus"></div></div>
   <div class="row"><div class="tx"><b>Sonido por defecto</b><span>${(SONIDOS.find(s=>s[0]===pr.sound)||[0,'Cabina'])[1]}</span></div><button class="mini" id="pf-snd">Cambiar</button></div></div>
- <div class="cardx g"><h3>Copia de seguridad</h3><div class="sb">Exporta tus vuelos a un archivo o impórtalos en otro teléfono.</div><div style="display:flex;gap:10px"><button class="mini" id="pf-exp">Exportar</button><button class="mini" id="pf-imp">Importar</button></div></div>
+ <div class="cardx g"><h3>Copia automática en Google Sheets</h3><div class="sb">Cada vez que aterrizas o cancelas, tus vuelos se copian a tu hoja. Si borras la app, los recuperas desde ahí.</div><input class="fld" id="pf-cloud" placeholder="Enlace de tu Apps Script (termina en /exec)" value="${(pr.cloud||'').replace(/"/g,'&quot;')}" style="font-size:13px"><div class="muted" id="pf-cst" style="font-size:12.5px;margin:8px 2px">${pr.cloud?(pr.cloudAt?'Última copia: '+fmtDate(pr.cloudAt)+' '+fmtHM(pr.cloudAt):'Enlace guardado.'):'Aún sin configurar.'}</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="mini am" id="pf-csave">Guardar y probar</button><button class="mini" id="pf-crest">Restaurar</button></div></div>
+ <div class="cardx g"><h3>Copia manual</h3><div class="sb">Exporta tus vuelos a un archivo o impórtalos en otro teléfono.</div><div style="display:flex;gap:10px"><button class="mini" id="pf-exp">Exportar</button><button class="mini" id="pf-imp">Importar</button></div></div>
  <div class="cardx g"><h3>Datos</h3><div class="sb">Herramientas para probar y empezar de cero.</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="mini" id="pf-demo">${S.flights.some(f=>f.demo)?'Quitar ejemplos':'Vuelos de ejemplo'}</button><button class="mini" id="pf-home">Volver a casa</button><button class="mini bd" id="pf-wipe">Borrar todo</button></div></div>
  <div class="phead" style="margin-top:22px"><h1 style="font-size:24px">Cuaderno de bitácora</h1></div>
  <div class="logb">${S.flights.length?S.flights.slice().reverse().map(logRow).join(''):'<div class="empty">Tus vuelos quedarán sellados aquí.</div>'}</div>`;
@@ -881,6 +882,12 @@ function profRender(){const pg=$('#pf-page'),L=landed(),m=totalMin(),km=totalKm(
  $('#pf-fast').onclick=e=>{S.prefs.fast=!S.prefs.fast;e.currentTarget.classList.toggle('on',S.prefs.fast);save();toast(S.prefs.fast?'Los próximos vuelos irán ×60':'Vuelos a tiempo real')};
  $('#pf-focus').onclick=e=>{S.prefs.focus=!S.prefs.focus;e.currentTarget.classList.toggle('on',S.prefs.focus);save()};
  $('#pf-snd').onclick=soundSheet;
+ const cst=t=>{const e=$('#pf-cst');if(e)e.textContent=t};
+ $('#pf-csave').onclick=async()=>{const u=$('#pf-cloud').value.trim();if(!/^https:\/\/script\.google\.com\/.+\/exec/.test(u)){cst('El enlace debe empezar por https://script.google.com y acabar en /exec');return}
+  S.prefs.cloud=u;save();cst('Enviando copia de prueba…');cloudSave();await new Promise(r=>setTimeout(r,3500));
+  try{const r=await fetch(u),o=await r.json();if(o&&Array.isArray(o.flights)&&o.flights.length===S.flights.length){S.prefs.cloudAt=Date.now();save();cst('Copia verificada: '+o.flights.length+' vuelos en tu hoja.')}else cst('Enviado, pero la hoja no coincide. Revisa que el script esté publicado para "Cualquier persona".')}catch(e){cst('No he podido leer la hoja. Revisa el enlace y que el acceso sea "Cualquier persona".')}};
+ $('#pf-crest').onclick=async()=>{const u=$('#pf-cloud').value.trim();if(!u){cst('Pega primero el enlace de tu Apps Script.');return}cst('Buscando tu copia…');
+  try{const o=await (await fetch(u)).json();if(!o||!Array.isArray(o.flights))throw 0;S=Object.assign(defs(),o);S.flight=null;S.prefs.cloud=u;save();cst('Restaurado. Reiniciando…');setTimeout(()=>location.reload(),600)}catch(e){cst('No he encontrado ninguna copia en ese enlace.')}};
  $('#pf-demo').onclick=()=>{if(S.flights.some(f=>f.demo))S.flights=S.flights.filter(f=>!f.demo);else addDemo();save();profRender()};
  $('#pf-home').onclick=()=>{if(S.flight){toast('Hay un vuelo en curso');return}S.pos=HOME;save();toast('De vuelta en Pamplona');profRender()};
  let wipe=0;$('#pf-wipe').onclick=e=>{if(!wipe){wipe=1;e.currentTarget.textContent='Toca otra vez para borrar';setTimeout(()=>{wipe=0;const b=$('#pf-wipe');if(b)b.textContent='Borrar todo'},3500);return}audioStop(true);S=defs();save();location.reload()};
@@ -893,6 +900,9 @@ function profRender(){const pg=$('#pf-page'),L=landed(),m=totalMin(),km=totalKm(
  $$('.lg',pg).forEach(b=>b.onclick=()=>b.classList.toggle('open'))}
 SCR.prof={el:$('#s-prof'),enter(){profRender()},tick(t,dt){gProf&&gProf.draw(t,dt)}};
 
+/* ===== copia en la nube ===== */
+function cloudSave(){const u=S.prefs.cloud;if(!u)return;try{fetch(u,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(S)}).then(()=>{S.prefs.cloudAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}).catch(()=>{})}catch(e){}}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 /* ===== ARRANQUE ===== */
 icons();
 $('#nav').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){closeSheet();go(b.dataset.go)}});
