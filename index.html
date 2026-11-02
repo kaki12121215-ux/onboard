@@ -748,7 +748,7 @@ SCR.ticket={el:$('#s-ticket'),
   h+=`<span class="tknotch" id="tk-nl" style="left:-14px;top:${HM-14}px"></span><span class="tknotch" id="tk-nr" style="left:${TW-14}px;top:${HM-14}px"></span><div class="tkz" id="tk-z" style="left:-10px;width:${TW+20}px;top:${HM-34}px;height:68px"></div><div class="fing" id="tk-f" style="left:0;top:${HM}px;--tw:${TW-70}px"></div>`;
   wr.insertAdjacentHTML('beforeend',h);
   sc.insertAdjacentHTML('beforeend',`<div class="tkhint tkx" id="tk-h" style="top:${TOPY+HM+HS+46}px"><b>Rasga el billete</b><span>Desliza el dedo por la línea de puntos</span></div>
-   <div class="tkafter tkx" id="tk-a" style="top:${TOPY+HM+40}px"><div style="text-align:center;color:#A9ABBC;font-size:14px;margin-bottom:16px">Billete facturado</div><div class="tgrow g"><span style="width:36px;height:36px;border-radius:12px;background:rgba(255,181,71,.16);color:#FFB547;display:grid;place-items:center">${ic('moon')}</span><div class="tx"><b>Modo Concentración</b><span>Se activa al embarcar</span></div><div class="sw ${S.prefs.focus?'on':''}" id="tk-sw"></div></div></div>
+   <div class="tkafter tkx" id="tk-a" style="top:${TOPY+HM+40}px"><div style="text-align:center;color:#A9ABBC;font-size:14px;margin-bottom:16px">Billete facturado</div><div class="tgrow g"><span style="width:36px;height:36px;border-radius:12px;background:rgba(255,181,71,.16);color:#FFB547;display:grid;place-items:center">${ic('moon')}</span><div class="tx"><b>Modo Concentración</b><span>Se activa al embarcar con tu atajo</span></div><div class="sw ${S.prefs.focus?'on':''}" id="tk-sw"></div></div></div>
    <div class="bot tkx" id="tk-b" style="opacity:0;pointer-events:none;transition:.7s"><button class="btn glow" id="tk-go">Embarcar</button></div>`);
   $('#tk-sw').onclick=e=>{S.prefs.focus=!S.prefs.focus;e.currentTarget.classList.toggle('on',S.prefs.focus);save()};
   $('#tk-go').onclick=board;
@@ -763,7 +763,9 @@ SCR.ticket={el:$('#s-ticket'),
  }};
 $('#tk-back').onclick=()=>go('seat');
 {const k=document.createElement('style');k.textContent='@keyframes tkin{from{opacity:0;transform:translateY(80px) scale(.96)}to{opacity:1;transform:none}}';document.head.appendChild(k)}
-function board(){const p=S.plan;if(!p)return;S.flight={id:p.id,from:p.from,to:p.to,dur:p.dur,km:p.km,seat:S.seat,reason:S.reason,start:null,paused:0,pausedAt:null,fast:!!S.prefs.fast};S.plan=null;save();audioStart();go('takeoff')}
+function focusShortcut(name,min){if(!S.prefs.focus)return;const u='shortcuts://run-shortcut?name='+encodeURIComponent(name)+(min!=null?'&input=text&text='+encodeURIComponent(min):'');try{location.href=u}catch(e){}}
+function board(){const p=S.plan;if(!p)return;S.flight={id:p.id,from:p.from,to:p.to,dur:p.dur,km:p.km,seat:S.seat,reason:S.reason,start:null,paused:0,pausedAt:null,fast:!!S.prefs.fast};S.plan=null;save();audioStart();go('takeoff');
+ focusShortcut('ONboard',Math.max(1,Math.ceil(S.flight.fast?p.dur/60+1:p.dur+1)))}
 
 /* ===== DESPEGUE ===== */
 const TO={t:0,s:0,v:0,end:false,stars:Array.from({length:60},()=>[Math.random(),Math.random()*.1,Math.random()])};
@@ -836,7 +838,7 @@ SCR.flight={el:$('#s-flight'),
  tick(t){if(!S.flight)return;if(t-FL.last<(S.flight.fast?33:48))return;FL.last=t;const I=fInfo();if(I.prog>=1&&!FL.landing){FL.landing=true;land();return}
   flightDraw(I);if(t-FL.hud>250){FL.hud=t;const txt=fmtClk(I.rem);$('#f-time').textContent=txt;$('#f-km').textContent=Math.round(I.km)+' km';$('#f-eta').textContent=fmtHM(Date.now()+I.rem*1000/(I.f.fast?60:1));$('#f-bar').style.width=I.prog*100+'%';$('#pz-t').textContent=txt;audioTick()}}};
 function land(){const f=S.flight;if(!f)return;const rec={id:f.id,from:f.from,to:f.to,ts:f.start,dur:f.dur,km:f.km,reason:f.reason,seat:f.seat,res:'landed',note:'',fast:f.fast};S.flights.push(rec);S.pos=f.to;if(!S.visited.includes(f.to))S.visited.push(f.to);S.flight=null;save();audioStop();go('pass',{mode:'land',rec,from:'home'})}
-function cancelFlight(){const I=fInfo(),f=S.flight;const rec={id:f.id,from:f.from,to:f.to,ts:f.start,dur:Math.max(1,Math.round(I.el/60000)),planned:f.dur,frac:I.prog,km:0,reason:f.reason,seat:f.seat,res:'cancelled',note:'',fast:f.fast};S.flights.push(rec);S.flight=null;save();audioStop();$('#f-pz').classList.remove('on');go('land',{rec,cancel:true})}
+function cancelFlight(){const I=fInfo(),f=S.flight;focusShortcut('ONboard fin');const rec={id:f.id,from:f.from,to:f.to,ts:f.start,dur:Math.max(1,Math.round(I.el/60000)),planned:f.dur,frac:I.prog,km:0,reason:f.reason,seat:f.seat,res:'cancelled',note:'',fast:f.fast};S.flights.push(rec);S.flight=null;save();audioStop();$('#f-pz').classList.remove('on');go('land',{rec,cancel:true})}
 $('#f-pause').onclick=()=>{const f=S.flight;if(!f||f.pausedAt)return;f.pausedAt=Date.now();save();$('#f-pz').classList.add('on')};
 $('#pz-res').onclick=()=>{const f=S.flight;if(f&&f.pausedAt){f.paused+=Date.now()-f.pausedAt;f.pausedAt=null;save()}$('#f-pz').classList.remove('on')};
 holdBtn($('#pz-hold'),1700,cancelFlight);
@@ -1055,7 +1057,7 @@ function profRender(){const pg=$('#pf-page'),L=landed(),m=totalMin(),km=totalKm(
   <div class="row"><div class="tx"><b>Pantalla encendida</b><span>Durante el vuelo</span></div>${seg('pf-scr',[['auto','Auto'],['always','Siempre'],['never','Nunca']],pr.screen)}</div>
   <div class="row" style="flex-wrap:wrap;gap:8px"><div class="tx"><b>Mapa</b><span>Luces: la Tierra de noche vista por la NASA. Satélite: necesita tu clave de Google.</span></div>${seg('pf-map',[['noche','Noche'],['estandar','Std'],['terreno','Terreno'],['luces','Luces'],['satelite','Satélite']],pr.map)}</div>
   <div class="row"><div class="tx"><b>Vuelo rápido</b><span>Para probar: 1 hora pasa en 1 minuto</span></div><div class="sw ${pr.fast?'on':''}" id="pf-fast"></div></div>
-  <div class="row"><div class="tx"><b>Modo Concentración</b><span>Se activa al embarcar con un atajo de iOS</span></div><div class="sw ${pr.focus?'on':''}" id="pf-focus"></div></div>
+  <div class="row"><div class="tx"><b>Modo Concentración</b><span>Al embarcar abre tu atajo «ONboard»; al cancelar, «ONboard fin»</span></div><div class="sw ${pr.focus?'on':''}" id="pf-focus"></div></div>
   <div class="row"><div class="tx"><b>Sonido</b><span>${pr.muted?'Silenciado':(mixOn().map(k=>SONIDOS.find(s=>s[0]===k)[1]).join(' + ')||'Ninguno')}</span></div><button class="mini" id="pf-snd">Cambiar</button></div></div>
  <div class="cardx g"><h3>Copia automática en Google Sheets</h3><div class="sb">Cada vez que aterrizas o cancelas, tus vuelos se copian a tu hoja. Si borras la app, los recuperas desde ahí.</div><input class="fld" id="pf-cloud" placeholder="Enlace de tu Apps Script (termina en /exec)" value="${(pr.cloud||'').replace(/"/g,'&quot;')}" style="font-size:13px"><div class="muted" id="pf-cst" style="font-size:12.5px;margin:8px 2px">${pr.cloud?(pr.cloudAt?'Última copia: '+fmtDate(pr.cloudAt)+' '+fmtHM(pr.cloudAt):'Enlace guardado.'):'Aún sin configurar.'}</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="mini am" id="pf-csave">Guardar y probar</button><button class="mini" id="pf-crest">Restaurar</button></div></div>
  <div class="cardx g"><h3>Satélite de Google</h3><div class="sb">Para ver fotos reales desde la ventanilla y en el mapa. Pega aquí tu clave de Google Maps (Map Tiles API). Las luces nocturnas de la NASA no necesitan clave.</div><input class="fld" id="pf-gkey" placeholder="Clave de API (empieza por AIza…)" value="${(pr.gkey||'').replace(/"/g,'&quot;')}" style="font-size:13px"><div class="muted" id="pf-gst" style="font-size:12.5px;margin:8px 2px">${pr.gkey?'Clave guardada.':'Sin clave: el día se dibuja, la noche usa la NASA.'}</div><button class="mini am" id="pf-gsave">Guardar y probar</button></div>
@@ -1248,7 +1250,7 @@ function pageHTML(p){if(p==='auth')return authTpl();if(p===1)return dataTpl();co
 function slotSet(name,p){const el=PS.slots[name];if(el.dataset.p===String(p))return;el.dataset.p=String(p);if(p==null||p===''){el.innerHTML='';return}el.innerHTML=pageHTML(p).replace(/§/g,'_'+(++PUID));applyHidden(el)}
 function applyHidden(root){$$('[data-it]',root).forEach(e=>e.style.opacity=PS.hidden.has(e.dataset.it)?0:1)}
 function camFor(view,sc){const W=$('#app').clientWidth;return{tx:W/2-(view==='L'?172:516)*sc,ty:0,sc}}
-function bookScale(){const W=$('#app').clientWidth,H=$('#app').clientHeight;return Math.min(1,(W-28)/PW,(H-300)/PH)}
+function bookScale(){const W=$('#app').clientWidth,H=$('#app').clientHeight,top=$('#pstage').offsetTop||160;return Math.min(1,(W-28)/PW,(H-top-196)/PH)}
 const PCLIP=[[0,0],[PW,0],[PW,PH],[0,PH]];
 function clipPoly(poly,n,c){const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],da=a[0]*n[0]+a[1]*n[1]-c,db=b[0]*n[0]+b[1]*n[1]-c;if(da<=0)out.push(a);if((da<0)!==(db<0)&&da!==db){const t=da/(da-db);out.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t])}}return out}
 function curlGeo(p){const C=[PW,PH],P=[PW-2*PW*p,PH-150*Math.sin(Math.PI*p)-10*p],M=[(C[0]+P[0])/2,(C[1]+P[1])/2],d=[C[0]-P[0],C[1]-P[1]],L=Math.hypot(d[0],d[1])||1,n=[d[0]/L,d[1]/L],c=M[0]*n[0]+M[1]*n[1];
@@ -1286,21 +1288,31 @@ async function passPan(view,ms=380){const c0=PS.last.cam,c1=camFor(view,bookScal
 
 /* --- gestos: deslizar = moverse por el libro abierto; seguir = pasar hoja --- */
 (()=>{const st=$('#pstage');let d=null;
- st.addEventListener('pointerdown',e=>{if(!PS.open||PS.busy||PS.mode==='stamping')return;d={x0:e.clientX,y0:e.clientY,t0:performance.now(),mode:null,id:e.pointerId}});
+ const closedCam=()=>stateClosed(0,.86).cam;
+ st.addEventListener('pointerdown',e=>{if(PS.busy||PS.mode==='stamping'||(!PS.open&&PS.mode!=='view'))return;d={x0:e.clientX,y0:e.clientY,t0:performance.now(),mode:null,id:e.pointerId}});
  st.addEventListener('pointermove',e=>{if(!d)return;const dx=e.clientX-d.x0,dy=e.clientY-d.y0,sc=bookScale();
   if(!d.mode){if(Math.abs(dx)<8||Math.abs(dx)<Math.abs(dy))return;st.setPointerCapture(d.id);
-   if(PS.view==='R')d.mode=dx>0?'panL':(PS.sp<PS.spreads-1?'fwd':'none');else d.mode=dx<0?'panR':(PS.sp>0?'back':'none');if(d.mode==='fwd'||d.mode==='back')sfx('page')}
+   if(!PS.open)d.mode=dx<0?'open':'none';
+   else if(PS.view==='R')d.mode=dx>0?'panL':(PS.sp<PS.spreads-1?'fwd':'none');
+   else d.mode=dx<0?'panR':(PS.sp>0?'back':'close');
+   if(d.mode==='fwd'||d.mode==='back')sfx('page');if(d.mode==='open')tiltOn()}
   const cR=camFor('R',sc).tx,cL=camFor('L',sc).tx;
   if(d.mode==='panL'){d.v=clamp(dx/(PW*sc),0,1);renderBook(Object.assign(stateSpread(PS.sp,'R'),{cam:{tx:lerp(cR,cL,d.v),ty:0,sc}}))}
   else if(d.mode==='panR'){d.v=clamp(-dx/(PW*sc),0,1);renderBook(Object.assign(stateSpread(PS.sp,'L'),{cam:{tx:lerp(cL,cR,d.v),ty:0,sc}}))}
   else if(d.mode==='fwd'){d.v=clamp(-dx/(PW*sc*1.25),0,1);renderBook(stateTurn(PS.sp,d.v,'R'))}
-  else if(d.mode==='back'){d.v=clamp(1-dx/(PW*sc*1.25),0,1);renderBook(stateTurn(PS.sp-1,d.v,'L'))}});
+  else if(d.mode==='back'){d.v=clamp(1-dx/(PW*sc*1.25),0,1);renderBook(stateTurn(PS.sp-1,d.v,'L'))}
+  else if(d.mode==='close'){d.v=clamp(dx/(PW*sc*1.3),0,1);renderBook(closeState(d.v))}
+  else if(d.mode==='open'){d.v=clamp(-dx/(PW*sc*1.3),0,1);renderBook(closeState(1-d.v))}});
  const end=async e=>{if(!d)return;const m=d.mode,v=d.v||0,dt=performance.now()-d.t0,fl=dt<260;d=null;if(!m||m==='none')return;PS.busy=true;const sc=bookScale();
   if(m==='panL'||m==='panR'){const go=v>.35||fl&&v>.08,from=m==='panL'?'R':'L',to=m==='panL'?'L':'R',c0=PS.last.cam.tx,c1=camFor(go?to:from,sc).tx;await tween(260,e=>renderBook(Object.assign(stateSpread(PS.sp,go?to:from),{cam:{tx:lerp(c0,c1,e),ty:0,sc}})),easeO);if(go)PS.view=to}
   else if(m==='fwd'){const go=v>.32||fl&&v>.06;await tween(go?360*(1-v)+120:260,e=>renderBook(stateTurn(PS.sp,go?lerp(v,1,e):lerp(v,0,e),'R')),easeO);if(go)PS.sp++;renderBook(stateSpread(PS.sp,'R'))}
   else if(m==='back'){const go=v<.68||fl&&v<.94;await tween(go?360*v+120:260,e=>renderBook(stateTurn(PS.sp-1,go?lerp(v,0,e):lerp(v,1,e),'L')),easeO);if(go)PS.sp--;renderBook(stateSpread(PS.sp,'L'))}
-  pDots();PS.busy=false};
+  else if(m==='close'){const go=v>.3||fl&&v>.06;await tween(go?700*(1-v)+200:300,e=>renderBook(closeState(go?lerp(v,1,e):lerp(v,0,e))),easeO);if(go){PS.open=false;PS.sp=0;PS.view='R';renderBook(stateClosed(0,1))}else renderBook(stateSpread(0,'L'))}
+  else if(m==='open'){const go=v>.3||fl&&v>.06;await tween(go?700*(1-v)+200:300,e=>renderBook(closeState(go?lerp(1-v,0,e):lerp(1-v,1,e))),easeO);if(go){PS.open=true;PS.sp=0;PS.view='R';renderBook(stateSpread(0,'R'))}else renderBook(stateClosed(0,1))}
+  pDots();passUI();PS.busy=false};
  st.addEventListener('pointerup',end);st.addEventListener('pointercancel',end)})();
+// x=0 abierto mirando el interior de la portada · x=1 cerrado
+function closeState(x){const sc=bookScale(),cL=camFor('L',sc).tx,cC=camFor('R',sc).tx,ang=clamp(180*(1-x),0,179.4),st=stateClosed(ang,1);st.cam={tx:lerp(cL,cC,easeIO(clamp(x*1.6,0,1))),ty:0,sc};st.L=null;st.R=1;st.cov={ang,back:'auth'};return st}
 // inclinar el móvil mueve los brillos
 function tiltOn(){const h=e=>{if(e.gamma==null)return;PS.tilt=clamp(e.gamma/45,-1,1);if(cur==='pass'&&PS.last&&!PS.raf2){PS.raf2=requestAnimationFrame(()=>{PS.raf2=0;if(!PS.busy)renderBook(PS.last)})}};
  try{if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission)DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted')addEventListener('deviceorientation',h)}).catch(()=>{});else addEventListener('deviceorientation',h)}catch(e){}tiltOn=()=>{}}
@@ -1345,7 +1357,7 @@ function passHead(){const land=PS.mode!=='view';$('#p-top').style.display=land?'
 function passUI(){const open=PS.open,land=PS.mode!=='view';$('#p-who').style.opacity=!open&&!land?1:0;$('#pdots').style.opacity=open?1:0;
  $('#p-open').style.display=!land&&!open?'':'none';$('#p-log').style.display=!land&&open?'':'none';$('#p-land').style.display=land&&PS.mode==='done'?'':'none'}
 SCR.pass={el:$('#s-pass'),
- enter(arg={}){paperNoise();passBuild();if(arg.from)PS.from=arg.from;else if(PREV&&PREV!=='log'&&PREV!=='pass')PS.from=PREV;const bs=bookScale(),stg=$('#pstage');stg.style.height=(PH*bs+10)+'px';requestAnimationFrame(()=>{const y=stg.offsetTop+PH*bs+26;$('#pdots').style.top=y+'px';$('#p-who').style.top=(y-6)+'px'});PS.mode=arg.mode||'view';PS.rec=arg.rec||null;PS.open=false;PS.sp=0;PS.view='R';PS.hidden=new Set();
+ enter(arg={}){paperNoise();passBuild();if(arg.from)PS.from=arg.from;else if(PREV&&PREV!=='log'&&PREV!=='pass')PS.from=PREV;const bs=bookScale(),stg=$('#pstage');stg.style.height=(PH*bs+10)+'px';requestAnimationFrame(()=>{const b2=bookScale();stg.style.height=(PH*b2+10)+'px';const y=stg.offsetTop+PH*b2+18;$('#pdots').style.top=y+'px';$('#p-who').style.top=(y-8)+'px';const bt=$('#s-pass .pbot').getBoundingClientRect().top-$('#app').getBoundingClientRect().top;$('#p-who').style.visibility=y+40>bt-6?'hidden':'visible'});PS.mode=arg.mode||'view';PS.rec=arg.rec||null;PS.open=false;PS.sp=0;PS.view='R';PS.hidden=new Set();
   ['L','R','F','B','C'].forEach(k=>{PS.slots[k].dataset.p='';PS.slots[k].innerHTML=''});$('#ptamp').innerHTML='';
   $('#p-name').textContent=passName();{const n=PS.items.length,a=new Set(landed().map(f=>f.to)).size;$('#p-count').textContent=`${n} ${n===1?'sello':'sellos'} · ${a} ${a===1?'aeropuerto':'aeropuertos'}`}
   passHead();$('#pcvf').innerHTML=coverTpl().replace(/§/g,'_cv');
@@ -1359,7 +1371,7 @@ async function passLandSeq(){PS.mode='stamping';const st=$('#pstage');st.style.t
  await wait(250);await passOpen(true);
  for(const it of PS.new){await goToPage(it.page,true);await wait(150);await stampItem(it,it.page%2===0?'L':'R');await wait(200)}
  $('#p-t2').textContent='¡Sellado!';PS.mode='done';passUI()}
-$('#p-open').onclick=async()=>{tiltOn();auCtx();if(!S.pass.nom){passEdit(true,()=>{SCR.pass.enter({});passOpen().then(passUI)});return}await passOpen();passUI()};
+$('#p-open').onclick=async()=>{if(PS.busy)return;tiltOn();auCtx();if(!S.pass.nom){passEdit(true,()=>{SCR.pass.enter({});passOpen().then(passUI)});return}await passOpen();passUI()};
 $('#p-back').onclick=async()=>{if(PS.busy)return;if(PS.open){await passClose();passUI()}go(PS.from||'prof')};
 $('#p-edit').onclick=()=>passEdit(false);
 $('#p-log').onclick=()=>go('log');
