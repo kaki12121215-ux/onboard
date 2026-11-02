@@ -1266,9 +1266,10 @@ function renderBook(st){const cam=st.cam;$('#pcam').style.transform=`translate($
  const lf=$('#pleaf'),rf=$('#prefl');lf.style.display=rf.style.display=on?'block':'none';$('#pfx').innerHTML='';$('#pfxu').innerHTML='';
  if(on){const g=curlGeo(st.p);lf.style.clipPath=lf.style.webkitClipPath=g.fc;$('#pbclip').style.clipPath=$('#pbclip').style.webkitClipPath=g.bc;rf.style.transform=`matrix(${g.m})`;$('#pfx').innerHTML=g.fx;$('#pfxu').innerHTML=g.fxu}
  const cv=$('#pcover');if(st.cov){cv.style.display='block';cv.style.transform=`rotateY(${-st.cov.ang}deg)`;const a=st.cov.ang;$('#pcd').style.opacity=a<90?(.28*Math.sin(Math.min(a,90)*D2R)).toFixed(3):0;$('#pbd').style.opacity=a>=90?(.32*Math.sin((180-a)*D2R)).toFixed(3):0;
-  slotSet('C',st.cov.back);$('#pcover').style.setProperty('--gp',(15+70*a/180+PS.tilt*30)+'%')}else cv.style.display='none';
- document.documentElement.style.setProperty('--hp',(30+(cam.tx%400)/8+PS.tilt*60+(st.p||0)*50)+'%');
- PS.last=st}
+  slotSet('C',st.cov.back);PS.gpBase=15+70*a/180;shine(performance.now())}else{cv.style.display='none';PS.gpBase=85}
+ PS.hpBase=(cam.tx%400)/8+(st.p||0)*50;PS.last=st}
+// brillo dorado y hologramas: se mueven solos despacio y con la inclinación del móvil
+function shine(t){const k=t/1000;$('#pcover').style.setProperty('--gp',((PS.gpBase||15)+9*Math.sin(k*.55)+PS.tilt*30).toFixed(1)+'%');document.documentElement.style.setProperty('--hp',(30+(PS.hpBase||0)+22*Math.sin(k*.45)+PS.tilt*60).toFixed(1)+'%')}
 function stateSpread(i,view,extra={}){const[a,b]=spreadPages(i);return Object.assign({cam:camFor(view,bookScale()),L:a,R:b,lf:null,lb:null,p:0,cov:null},extra)}
 function stateTurn(i,p,view){const[a,b]=spreadPages(i),[c,d]=spreadPages(i+1);return{cam:camFor(view,bookScale()),L:a,R:d,lf:b,lb:c,p,cov:null}}
 function stateClosed(ang,sc,extra={}){const s=bookScale()*sc,cam=camFor('R',s);cam.ty=PH*bookScale()*(1-sc)/2;return Object.assign({cam,L:ang>=179.5?'auth':null,R:1,lf:null,lb:null,p:0,cov:ang>=179.5?null:{ang,back:'auth'}},extra)}
@@ -1314,9 +1315,10 @@ async function passPan(view,ms=380){const c0=PS.last.cam,c1=camFor(view,bookScal
 // x=0 abierto mirando el interior de la portada · x=1 cerrado
 function closeState(x){const sc=bookScale(),cL=camFor('L',sc).tx,cC=camFor('R',sc).tx,ang=clamp(180*(1-x),0,179.4),st=stateClosed(ang,1);st.cam={tx:lerp(cL,cC,easeIO(clamp(x*1.6,0,1))),ty:0,sc};st.L=null;st.R=1;st.cov={ang,back:'auth'};return st}
 // inclinar el móvil mueve los brillos
-function tiltOn(){const h=e=>{if(e.gamma==null)return;PS.tilt=clamp(e.gamma/45,-1,1);if(cur==='pass'&&PS.last&&!PS.raf2){PS.raf2=requestAnimationFrame(()=>{PS.raf2=0;if(!PS.busy)renderBook(PS.last)})}};
- try{if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission)DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted')addEventListener('deviceorientation',h)}).catch(()=>{});else addEventListener('deviceorientation',h)}catch(e){}tiltOn=()=>{}}
-
+let tiltOK=false;
+function tiltOn(){if(tiltOK)return;const h=e=>{if(e.gamma==null)return;PS.tilt=clamp(e.gamma/35,-1,1)};
+ try{if(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted'&&!tiltOK){tiltOK=true;addEventListener('deviceorientation',h)}}).catch(()=>{})}else{tiltOK=true;addEventListener('deviceorientation',h)}}catch(e){}}
+$('#s-pass').addEventListener('click',()=>tiltOn());$('#pstage').addEventListener('touchend',()=>tiltOn(),{passive:true});
 /* --- tampón visto desde arriba --- */
 function footprint(it){const w=it.w,kind=it.k==='exit'?'exit':apShape(it.ap);
  if(kind==='exit'){const ww=w+12,hh=w*140/260+12;return[[-ww/2,-hh/2],[ww/2,-hh/2],[ww/2,hh/2],[-ww/2,hh/2]]}
@@ -1366,7 +1368,8 @@ SCR.pass={el:$('#s-pass'),
    renderBook(stateClosed(0,.8));passUI();$('#pstage').style.opacity=0;
    const go=()=>passLandSeq();if(!S.pass.nom)setTimeout(()=>passEdit(true,go),700);else setTimeout(go,500)}
   else{renderBook(stateClosed(0,1));passUI();$('#pstage').style.opacity=1}},
- leave(){cancelAnimationFrame(PS.raf);PS.busy=false}};
+ leave(){cancelAnimationFrame(PS.raf);PS.busy=false},
+ tick(t){shine(t)}};
 async function passLandSeq(){PS.mode='stamping';const st=$('#pstage');st.style.transition='opacity .5s,transform .6s';st.style.opacity=1;
  await wait(250);await passOpen(true);
  for(const it of PS.new){await goToPage(it.page,true);await wait(150);await stampItem(it,it.page%2===0?'L':'R');await wait(200)}
