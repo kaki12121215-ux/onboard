@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap">
 <style>
 /* ONboard · pantallas a pantalla completa, noche + ámbar */
-:root{--noche:#05060C;--cielo:#141A30;--sup:#10121A;--linea:#20232F;--texto:#F3F3F6;--niebla:#A9ABBC;--ambar:#FFB547;--ambar2:#FF9F1C;--ambar3:#FFE2A8;--ok:#30D158;--bad:#FF453A;--glass:rgba(22,26,44,.62);--ring:rgba(255,255,255,.11);--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);--font:'M PLUS Rounded 1c',ui-rounded,'SF Pro Rounded',system-ui,-apple-system,sans-serif;color-scheme:dark}
+:root{--noche:#05060C;--cielo:#141A30;--sup:#10121A;--linea:#20232F;--texto:#F3F3F6;--niebla:#A9ABBC;--ambar:#FFB547;--ambar2:#FF9F1C;--ambar3:#FFE2A8;--ok:#30D158;--bad:#FF453A;--glass:rgba(22,26,44,.62);--ring:rgba(255,255,255,.11);--st:calc(env(safe-area-inset-top,0px)*1.2);--sb:env(safe-area-inset-bottom,0px);--font:'M PLUS Rounded 1c',ui-rounded,'SF Pro Rounded',system-ui,-apple-system,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--noche);color:var(--texto);font-family:var(--font);font-weight:400;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation}
@@ -77,7 +77,8 @@ h1,h2,h3{margin:0;font-weight:500}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
 .rchip{padding:9px 16px;border-radius:999px;font-size:15px;border:1px solid var(--ring);background:var(--glass);transition:.25s}
 .rchip.on{background:rgba(255,181,71,.16);border-color:var(--ambar);color:var(--ambar)}
-.cabin{margin:6px auto 0;width:max-content;padding:26px 22px 22px;border-radius:70px 70px 34px 34px;background:linear-gradient(180deg,#141a30,#0e1220);border:1px solid var(--ring)}
+.planew{position:relative;width:max-content;margin:10px auto 40px}#se-plane{position:absolute;top:0;pointer-events:none;overflow:visible}
+.cabin{position:relative;width:max-content;padding:160px 22px 160px}
 .crow{display:grid;grid-template-columns:42px 42px 34px 42px 42px;gap:8px;margin-bottom:8px;align-items:center}
 .crow em{font-style:normal;font-size:12px;color:var(--niebla);text-align:center}
 .seat{height:44px;border-radius:14px 14px 10px 10px;background:#232a45;border:1px solid rgba(255,255,255,.1);transition:.25s;font-size:12px;color:var(--niebla)}
@@ -350,6 +351,8 @@ html{height:100%;height:100dvh}body{min-height:100%;min-height:100dvh}
 html.night #nightveil{opacity:.8}
 .lyroute{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;letter-spacing:.06em;color:rgba(243,243,246,.35)}.lyroute span.on{color:var(--ambar)}.lyroute span.here{padding:3px 9px;border-radius:999px;background:rgba(255,181,71,.16)}.lyroute i{width:18px;border-top:2px dotted rgba(255,255,255,.25)}
 .dots i.td{box-shadow:inset 0 0 0 1.5px rgba(255,181,71,.7)}
+#se-go.off{opacity:.45}
+#s-seat .sc{overflow-x:hidden}
 
 </style>
 <div id="app">
@@ -400,7 +403,7 @@ html.night #nightveil{opacity:.8}
     <div class="chips" id="se-reasons"></div>
     <div class="goalw"><div class="muted" style="font-size:13px;margin:0 2px 6px">Plan del vuelo</div><input class="fld" id="se-goal" maxlength="70" placeholder="¿Qué vas a hacer? Ej.: terminar el informe"></div>
     <div id="se-stops"></div>
-    <div class="cabin" id="se-cabin"></div>
+    <div class="planew"><svg id="se-plane" aria-hidden="true"></svg><div class="cabin" id="se-cabin"></div></div>
   </div>
   <div class="sumc g"><div><div class="muted" style="font-size:12px">Asiento</div><b style="font-weight:500;font-size:22px" id="se-seat">4D</b></div><div style="text-align:right"><div class="muted" style="font-size:12px">Duración</div><b class="num" style="font-weight:500;font-size:22px" id="se-dur"></b></div></div>
   <div class="bot"><button class="btn glow" id="se-go">Continuar</button></div>
@@ -530,7 +533,7 @@ html.night #nightveil{opacity:.8}
 
 <script>
 'use strict';
-const APPV='1.9.1 (3 nov)';
+const APPV='1.9.3 (3 nov)';
 /* ===== utilidades ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -594,7 +597,7 @@ function aeqd(lon0,lat0){const s0=Math.sin(lat0*D2R),c0=Math.cos(lat0*D2R),l0=lo
 
 /* ===== datos del usuario ===== */
 const KEY='onboard.v1';
-const defs=()=>({name:'Iñaki',pos:HOME,flights:[],visited:[HOME],plan:null,flight:null,seat:'4D',reason:'Corregir',reasons:['Corregir','Leer','Estudiar','Trabajar','Escribir'],
+const defs=()=>({name:'',pos:HOME,flights:[],visited:[HOME],plan:null,flight:null,seat:'4D',reason:'Corregir',reasons:['Corregir','Leer','Estudiar','Trabajar','Escribir'],
  pass:{},prefs:{screen:'auto',fast:false,focus:true,mix:{cabina:.7},muted:false,vol:.8,map:'noche',gkey:''},layout:{order:['bars','reasons','map','streak','week','punct'],hidden:[]}});
 let S;try{S=Object.assign(defs(),JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){S=defs()}
 S.prefs=Object.assign(defs().prefs,S.prefs||{});S.pass=S.pass||{};if(S.prefs.map==='luces'||S.prefs.map==='satelite')S.prefs.map='real';
@@ -827,11 +830,22 @@ const SEATC=['A','C','D','F'];
 function occ(seed){const r=[];let x=seed%9973+7;for(let i=0;i<40;i++){x=(x*7919+13)%10007;r.push(x)}return new Set(r.map(v=>(1+v%12)+SEATC[v%4]))}
 SCR.seat={el:$('#s-seat'),
  enter(){if(!S.plan){go('dest');return}const p=S.plan;$('#se-route').innerHTML=`<b style="color:var(--ambar);font-weight:700">${p.from}</b> → <b style="color:var(--ambar);font-weight:700">${p.to}</b>`;$('#se-dur').textContent=fmtDur(p.dur);
-  const oc=occ(p.id);if(oc.has(S.seat))S.seat='4D';
+  const oc=occ(p.id);S.seat=null;
   const rb=$('#se-reasons');const rr=()=>{rb.innerHTML='';S.reasons.forEach(r=>{const b=document.createElement('button');b.className='rchip'+(S.reason===r?' on':'');b.textContent=r;b.onclick=()=>{S.reason=r;save();rr()};rb.appendChild(b)});const pl=document.createElement('button');pl.className='rchip';pl.textContent='+';pl.onclick=()=>openSheet(`<h3>Nuevo motivo</h3><input class="srch" id="nr" maxlength="18" placeholder="Por ejemplo: Programar"><button class="btn" id="nrb" style="margin-top:6px">Añadir</button>`,c=>{$('#nrb',c).onclick=()=>{const v=$('#nr',c).value.trim();if(v&&!S.reasons.includes(v)){S.reasons.push(v);S.reason=v;save();rr()}closeSheet()}});rb.appendChild(pl)};rr();
-  const cab=$('#se-cabin');cab.innerHTML='';for(let r=1;r<=12;r++){const row=document.createElement('div');row.className='crow';SEATC.forEach((l,i)=>{if(i===2){const e=document.createElement('em');e.textContent=r;row.appendChild(e)}const id=r+l,b=document.createElement('button');b.className='seat'+(oc.has(id)?' occ':'')+(S.seat===id?' sel':'');b.textContent=id;b.onclick=()=>{S.seat=id;save();$$('.seat',cab).forEach(x=>x.classList.toggle('sel',x.textContent===id));$('#se-seat').textContent=id};row.appendChild(b)});cab.appendChild(row)}
-  $('#se-seat').textContent=S.seat;try{seatExtras()}catch(e){console.error(e)}setTimeout(()=>{const s=$('.seat.sel',cab),sc=$('#s-seat .sc');if(s&&sc)sc.scrollTop=Math.max(0,s.offsetTop-sc.clientHeight/2+60)},50)}};
-$('#se-back').onclick=()=>go('dest');$('#se-go').onclick=()=>{save();go('ticket')};
+  const cab=$('#se-cabin');cab.innerHTML='';for(let r=1;r<=12;r++){const row=document.createElement('div');row.className='crow';SEATC.forEach((l,i)=>{if(i===2){const e=document.createElement('em');e.textContent=r;row.appendChild(e)}const id=r+l,b=document.createElement('button');b.className='seat'+(oc.has(id)?' occ':'')+(S.seat===id?' sel':'');b.textContent=id;b.onclick=()=>{S.seat=id;save();$$('.seat',cab).forEach(x=>x.classList.toggle('sel',x.textContent===id));$('#se-seat').textContent=id;$('#se-go').classList.remove('off')};row.appendChild(b)});cab.appendChild(row)}
+  $('#se-seat').textContent=S.seat||'—';$('#se-go').classList.toggle('off',!S.seat);try{seatExtras()}catch(e){console.error(e)}try{planeSVG()}catch(e){console.error(e)}const sc=$('#s-seat .sc');if(sc)sc.scrollTop=0;requestAnimationFrame(()=>{if(sc)sc.scrollTop=0})}};
+$('#se-back').onclick=()=>go('dest');$('#se-go').onclick=()=>{if(!S.seat){toast('Elige tu asiento');return}save();go('ticket')};
+function planeSVG(){const cab=$('#se-cabin'),sv=$('#se-plane');if(!cab||!sv)return;const W=cab.offsetWidth,H=cab.offsetHeight,ww=78,N=150,T=H-150,cx=ww+W/2,L=ww,R=ww+W,wy=Math.round(H*.36),ty=T+30,VW=W+2*ww;
+ sv.setAttribute('viewBox',`0 0 ${VW} ${H}`);sv.style.width=VW+'px';sv.style.height=H+'px';sv.style.left=(-ww)+'px';
+ const fus=`M${L} ${N}C${L} ${N*.42} ${cx-W*.2} 0 ${cx} 0C${cx+W*.2} 0 ${R} ${N*.42} ${R} ${N}L${R} ${T}C${R} ${T+80} ${cx+W*.16} ${H-4} ${cx} ${H-4}C${cx-W*.16} ${H-4} ${L} ${T+80} ${L} ${T}Z`;
+ const wing=s=>{const x0=s>0?R-6:L+6,x1=s>0?VW-4:4;return`M${x0} ${wy}L${x1} ${wy+150}Q${x1} ${wy+176} ${x1-s*22} ${wy+178}L${x0} ${wy+170}Z`};
+ const stab=s=>{const x0=s>0?R-30:L+30,x1=s>0?R+44:L-44;return`M${x0} ${ty}L${x1} ${ty+56}Q${x1} ${ty+72} ${x1-s*14} ${ty+72}L${x0} ${ty+60}Z`};
+ const eng=s=>{const x=s>0?R+36:L-36;return`<rect x="${x-11}" y="${wy+46}" width="22" height="46" rx="11" fill="#0f1428" stroke="rgba(255,255,255,.14)"/>`};
+ sv.innerHTML=`<defs><linearGradient id="fusg" x1="0" x2="1"><stop offset="0" stop-color="#10152a"/><stop offset=".5" stop-color="#1a2240"/><stop offset="1" stop-color="#10152a"/></linearGradient><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#161d38"/><stop offset="1" stop-color="#0e1326"/></linearGradient></defs>
+ <g fill="url(#wg)" stroke="rgba(255,255,255,.13)" stroke-width="1.2" stroke-linejoin="round"><path d="${wing(1)}"/><path d="${wing(-1)}"/><path d="${stab(1)}"/><path d="${stab(-1)}"/></g>${eng(1)}${eng(-1)}
+ <path d="${fus}" fill="url(#fusg)" stroke="rgba(255,255,255,.16)" stroke-width="1.2"/>
+ ${[-1.5,-.5,.5,1.5].map(k=>`<rect x="${cx+k*28-12}" y="${N*.5+Math.abs(k)*Math.abs(k)*5}" width="24" height="11" rx="3" fill="rgba(150,180,255,.22)" transform="rotate(${-k*7} ${cx+k*28} ${N*.5+Math.abs(k)*Math.abs(k)*5+5})"/>`).join("")}
+ <path d="M${cx} ${H-60}V${H-12}" stroke="rgba(255,255,255,.12)" stroke-width="3" stroke-linecap="round"/>`}
 
 /* ===== BILLETE ===== */
 const HM=296,HS=118,TOPY=112;
@@ -1470,7 +1484,7 @@ async function passPan(view,ms=380){const c0=PS.last.cam,c1=camFor(view,bookScal
 function closeState(x){const sc=bookScale(),cL=camFor('L',sc).tx,cC=camFor('R',sc).tx,ang=clamp(180*(1-x),0,179.4),st=stateClosed(ang,1);st.cam={tx:lerp(cL,cC,easeIO(clamp(x*1.6,0,1))),ty:0,sc};st.L=null;st.R=1;st.cov={ang,back:'auth'};return st}
 // inclinar el móvil mueve los brillos
 let tiltOK=false,tiltR=0;
-function tiltOn(){if(tiltOK)return;const h=e=>{if(e.gamma==null)return;PS.tilt=clamp(e.gamma/30,-1,1);if(!tiltR)tiltR=requestAnimationFrame(()=>{tiltR=0;$('#s-pass').style.setProperty('--tilt',PS.tilt.toFixed(2))})};
+function tiltOn(){return;const h=e=>{if(e.gamma==null)return;PS.tilt=clamp(e.gamma/30,-1,1);if(!tiltR)tiltR=requestAnimationFrame(()=>{tiltR=0;$('#s-pass').style.setProperty('--tilt',PS.tilt.toFixed(2))})};
  try{if(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted'&&!tiltOK){tiltOK=true;addEventListener('deviceorientation',h)}}).catch(()=>{})}else{tiltOK=true;addEventListener('deviceorientation',h)}}catch(e){}}
 $('#s-pass').addEventListener('click',()=>tiltOn());$('#pstage').addEventListener('touchend',()=>tiltOn(),{passive:true});
 /* --- tampón visto desde arriba --- */
@@ -1873,6 +1887,11 @@ function stWith(name,ds,x,y,w,rot){const col='#B4530F',N=ascii(name).trim().slic
 ${T(150,198,N.length>8?28:36,N,700,3)}<path d="M98 214H202" stroke-width="5"/>`,'<path id="t@§" d="M40 150a110 110 0 0 1 220 0"/><path id="b@§" d="M22 150a128 128 0 0 0 256 0"/>')}
 {const sf=stampFor;stampFor=function(it,x,y,w,rot){if(it.k==='with')return stWith(it.who,sDate(it.ts),x,y,w,rot);return sf(it,x,y,w,rot)}}
 
+/* --- nombre: sale del pasaporte si no se ha puesto otro --- */
+function syncName(){const n=((S.pass&&S.pass.nom)||'').trim();if(!n)return;
+ if(!S.name||S.name===S.nameFrom||(S.name==='Iñaki'&&n!=='Iñaki'&&!S.nameFrom)){if(S.name!==n){S.name=n;save()}}
+ if(S.nameFrom!==n){S.nameFrom=n;save()}}
+for(const k of['home','prof','stats','pass']){const sc=SCR[k];if(!sc||!sc.enter)continue;const e=sc.enter;sc.enter=function(...a){try{syncName()}catch(_){}return e.apply(this,a)}}
 /* --- arranque --- */
 setTimeout(checkInvite,600);
 try{if(S.flight){const f=S.flight;if(!f.start)go('takeoff');else{const I=fInfo();if(I.prog>=1){FL.landing=true;land()}else go('flight')}}else go('home')}catch(e){console.error(e);try{go('home')}catch(_){}}window.addEventListener('hashchange',checkInvite);
