@@ -1,4 +1,4 @@
-const C='onboard-v4',T='onboard-tiles-1',F=['./','index.html','voz.mp3','tex_day_4k.jpg','tex_relief_4k.jpg','ONboard.shortcut','ONboard_fin.shortcut','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'];
+const C='onboard-v5',T='onboard-tiles-1',F=['./','index.html','voz.mp3','tex_day_4k.jpg','tex_relief_4k.jpg','ONboard.shortcut','ONboard_fin.shortcut','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'];
 const TILE=/server\.arcgisonline\.com|gibs\.earthdata\.nasa\.gov/;let puts=0;
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>Promise.all(F.map(f=>c.add(f).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C&&x!==T).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
