@@ -1128,7 +1128,7 @@ body.clsmode #app,body.clsmode #nav,body.clsmode #sheet,body.clsmode #toast{disp
 
 <script>
 'use strict';
-const APPV='2.3 (4 nov)';
+const APPV='2.3.1 (5 nov)';
 /* ===== utilidades ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -3845,6 +3845,23 @@ document.addEventListener('visibilitychange',()=>{const f=S.flight;if(document.h
 /* --- VENTANILLA: de noche cuando es de noche de verdad --- */
 {const we=SCR.window.enter;SCR.window.enter=function(...a){we.apply(this,a);try{const I=fInfo();setDay(isDay(I.pos.lat,I.pos.lon))}catch(e){}}}
 {const wt=SCR.window.tick;let lt=0;SCR.window.tick=function(t,dt){wt.call(this,t,dt);if(t-lt>20000){lt=t;try{const I=fInfo();setDay(isDay(I.pos.lat,I.pos.lon))}catch(e){}}}}
+
+/* --- 2.3.1: aviso de llegada y descansos que empiezan con un botón --- */
+function arrivalDing(){if(S.prefs.arrAlert===false)return;try{navigator.vibrate&&navigator.vibrate([180,120,180])}catch(e){}const c=auCtx();if(!c)return;const t=c.currentTime+.05,g=c.createGain();g.gain.value=.85;
+ if(AU.routed){g.connect(AU.master);const m=AU.master.gain,prev=S.prefs.muted?0:(S.prefs.vol!=null?S.prefs.vol:1);m.cancelScheduledValues(t);m.setValueAtTime(Math.max(m.value,.9),t);m.setTargetAtTime(prev,t+3.4,.3)}else g.connect(c.destination);
+ const tone=(at,f)=>{for(const[k,a]of[[1,1],[2,.25],[3,.08]]){const o=c.createOscillator(),e=c.createGain();o.type='sine';o.frequency.value=f*k;e.gain.setValueAtTime(0,t+at);e.gain.linearRampToValueAtTime(.32*a,t+at+.012);e.gain.exponentialRampToValueAtTime(.0008,t+at+1.5);o.connect(e);e.connect(g);o.start(t+at);o.stop(t+at+1.6)}};
+ tone(0,880);tone(.55,698.5);tone(1.5,880);tone(2.05,698.5)}
+{const ld=land;land=function(...a){ld.apply(this,a);try{arrivalDing()}catch(e){}const T=S.trip;if(T&&T.layEnd&&!T.layWait){T.layDur=Math.max(1e4,T.layEnd-Date.now());T.layWait=1;save()}}}
+{const lt=SCR.lay.tick;SCR.lay.tick=function(t){const T=S.trip;if(T&&T.layWait&&T.layDur)T.layEnd=Date.now()+T.layDur;if(T&&!T.layWait&&T.layEnd&&T.layEnd-Date.now()<=0&&!T.dinged){T.dinged=1;try{arrivalDing()}catch(e){}}return lt.call(this,t)}}
+{const le=SCR.lay.enter;SCR.lay.enter=function(){le.call(this);const T=S.trip;if(!T)return;T.dinged=0;const go2=$('#ly-go');let b=$('#ly-start');if(!b){go2.insertAdjacentHTML('beforebegin','<button class="btn glow" id="ly-start">Empezar descanso</button>');b=$('#ly-start')}
+ const sync=()=>{const w=!!T.layWait;b.style.display=w?'':'none';go2.classList.toggle('glow',!w);go2.classList.toggle('sec',w);const l=$('.lyring span');if(l)l.textContent='de descanso'};sync();
+ b.onclick=()=>{T.layWait=0;T.layEnd=Date.now()+(T.layDur||6e5);save();sync();try{sfx('chime')}catch(e){}}}}
+restSheet=function(m){openSheet(`<div style="text-align:center"><div class="cap">Descanso</div><div class="mono" id="rs-t" style="font-size:64px;margin:10px 0;color:var(--ambar)">${m}:00</div><div class="muted" style="font-size:14px">Levántate, bebe agua y mira a lo lejos. Empieza cuando quieras; te aviso al terminar.</div><button class="btn glow" id="rs-go" style="margin-top:16px">Empezar descanso</button><button class="mini" id="rs-x" style="margin-top:12px">Saltar descanso</button></div>`,c=>{let it=null;
+ $('#rs-go',c).onclick=e=>{e.currentTarget.style.display='none';$('#rs-x',c).textContent='Terminar descanso';const end=Date.now()+m*6e4;it=setInterval(()=>{const r=(end-Date.now())/1000,el=$('#rs-t',c);if(!el||!$('#sheet').classList.contains('on')){clearInterval(it);return}el.textContent=fmtClk(Math.max(0,r));if(r<=0){clearInterval(it);arrivalDing();toast('Fin del descanso');closeSheet()}},500)};
+ $('#rs-x',c).onclick=()=>{clearInterval(it);closeSheet()}})};
+{const sr=setRender;setRender=function(){sr();const pg=$('#set-page'),cap=$('#se-cap',pg);if(!cap)return;const row=cap.closest('.srw');row.insertAdjacentHTML('beforebegin',`<div class="srw"><div class="t"><b>Aviso de llegada</b><span>Un «ding-dong» al aterrizar y al acabar un descanso, aunque el comandante esté en silencio</span></div><div class="sw ${S.prefs.arrAlert!==false?'on':''}" id="se-arr"></div></div>`);
+ $('#se-arr',pg).onclick=e=>{S.prefs.arrAlert=S.prefs.arrAlert===false;e.currentTarget.classList.toggle('on',S.prefs.arrAlert!==false);save();if(S.prefs.arrAlert!==false){auUnlock&&auUnlock();arrivalDing()}};
+ const t=$('.t span',row);if(t)t.textContent='Voz y texto, solo texto o nada'}}
 /* ===== ONboard · MODO CLASE (pantalla del profesor y vista de alumnos) ===== */
 const CLQ=new URLSearchParams(location.search),CLSMODE=CLQ.has('clase')?'prof':CLQ.has('ver')?'ver':null;
 if(CLSMODE){
