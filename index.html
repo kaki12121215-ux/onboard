@@ -820,6 +820,10 @@ button.folder{position:absolute;left:12px;right:12px;bottom:calc(var(--sb) + 18p
 .cpnum{display:grid;grid-template-columns:repeat(3,1fr);margin:0 4px 16px}.cpnum b{display:block;font-size:30px;font-weight:300}.cpnum span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a9acbf;font-weight:700}
 .cpw{position:relative;margin:0 auto 16px;border-radius:4px 12px 12px 4px;overflow:hidden}.cpw .pg{border-radius:0}
 .cpnext{text-align:center;color:#FFD9A0;font-size:14px;margin:4px 0}
+button.srw{width:100%;text-align:left;font:inherit;color:inherit;background:none;border:0;border-top:1px solid rgba(255,255,255,.07);-webkit-appearance:none;appearance:none}button.srw .t span{text-align:left}
+#h-ret,#h-rep{width:fit-content!important;max-width:100%;margin-left:auto!important;margin-right:auto!important}
+.sring svg{flex:none}.sring span{white-space:nowrap}
+#st-goald{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;font:inherit;color:inherit}
 /* ===== MODO CLASE (16:9) ===== */
 body.clsmode{background:#05060b!important;overflow:hidden}
 body.clsmode #app,body.clsmode #nav,body.clsmode #sheet,body.clsmode #toast{display:none!important}
@@ -1169,7 +1173,7 @@ body.clsmode.clspass #p-edit,body.clsmode.clspass #p-note,body.clsmode.clspass .
 
 <script>
 'use strict';
-const APPV='2.3.7 (5 nov)';
+const APPV='2.3.9 (5 nov)';
 /* ===== utilidades ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -3855,7 +3859,7 @@ function daySummaryMaybe(){if(!S.prefs.daySum)return;const now=new Date();if(now
 /* --- ESTADÍSTICAS: objetivo diario y mejor franja --- */
 function bestSlot(){const L=landed().filter(f=>!f.demo&&!f.turb);if(L.length<4)return null;const b={};L.forEach(f=>{const h=new Date(f.ts).getHours(),k=Math.floor(h/2)*2;b[k]=(b[k]||0)+f.dur});const k=Object.keys(b).sort((x,y)=>b[y]-b[x])[0];return{h:+k,min:b[k]}}
 {const sr=statsRender;statsRender=function(){sr();const pg=$('#st-page')||$('#s-stats .page');if(!pg)return;const g=goalDP(),bs=bestSlot();const grid=$('.sgrid2',pg);if(!grid)return;
- grid.insertAdjacentHTML('afterend',`<div class="sgrid2"><button class="sc1 g" id="st-goald" style="text-align:left"><span class="cap">Objetivo de hoy</span><div class="sring">${ring2(g.p,g.p>=1?'#5FD39A':'#FFB547',84)}<div><b>${Math.round(g.p*100)}%</b><span>${S.prefs.goalDk==='horas'?g.v.toFixed(1).replace('.',',')+' / '+g.g+' h':g.v+' / '+g.g+' vuelos'}</span></div></div></button><div class="sc1 g"><span class="cap">Tu mejor franja</span>${bs?`<div class="scn"><b style="font-size:34px">${bs.h}–${bs.h+2} h</b></div><div class="muted" style="font-size:12.5px;margin-top:6px">Te concentras mejor de ${bs.h} a ${bs.h+2}, según tus vuelos sin turbulencias.</div>`:'<div class="muted" style="font-size:13px;margin-top:10px">Vuela un poco más y te digo a qué hora te concentras mejor.</div>'}</div></div>`);
+ grid.insertAdjacentHTML('afterend',`<div class="sgrid2"><button class="sc1 g" id="st-goald" style="text-align:left"><span class="cap">Objetivo de hoy</span><div class="sring">${ring2(g.p,g.p>=1?'#5FD39A':'#FFB547',66)}<div><b>${Math.round(g.p*100)}%</b><span>${S.prefs.goalDk==='horas'?g.v.toFixed(1).replace('.',',')+' / '+g.g+' h':g.v+' / '+g.g+' vuelos'}</span></div></div></button><div class="sc1 g"><span class="cap">Tu mejor franja</span>${bs?`<div class="scn"><b style="font-size:34px">${bs.h}–${bs.h+2} h</b></div><div class="muted" style="font-size:12.5px;margin-top:6px">Te concentras mejor de ${bs.h} a ${bs.h+2}, según tus vuelos sin turbulencias.</div>`:'<div class="muted" style="font-size:13px;margin-top:10px">Vuela un poco más y te digo a qué hora te concentras mejor.</div>'}</div></div>`);
  $('#st-goald').onclick=goalSheet;const sg=$('#st-goal');if(sg)sg.onclick=goalSheet}}
 
 /* --- AJUSTES: objetivos, exprés, resumen y copia de seguridad --- */
