@@ -878,6 +878,7 @@ body.xdrag{-webkit-user-select:none;user-select:none}.xg.ed .xc{-webkit-user-sel
 #s-seat .sumc{background:rgba(20,22,31,.96)}
 .slegend{flex-wrap:wrap!important;justify-content:center!important;row-gap:6px;padding:0 4px;margin-left:0!important;margin-right:0!important}
 #s-ptab .phead,#s-stats .phead{padding-right:0!important}
+#s-ptab .phead2{margin-right:0!important}
 /* ===== MODO CLASE (16:9) ===== */
 body.clsmode{background:#05060b!important;overflow:hidden}
 body.clsmode #app,body.clsmode #nav,body.clsmode #sheet,body.clsmode #toast{display:none!important}
@@ -1227,7 +1228,7 @@ body.clsmode.clspass #p-edit,body.clsmode.clspass #p-note,body.clsmode.clspass .
 
 <script>
 'use strict';
-const APPV='2.5.2 (5 nov)';
+const APPV='2.5.3 (6 nov)';
 /* ===== utilidades ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -3839,6 +3840,7 @@ logPDF=async function(){toast('Preparando el PDF…');let J;try{J=await loadJsPD
   doc.addPage();doc.addImage(cv.toDataURL('image/jpeg',.88),'JPEG',0,0,595,842)}
  const blob=doc.output('blob'),file=new File([blob],'ONboard-bitacora.pdf',{type:'application/pdf'});try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Bitácora ONboard'});return}}catch(e){if(e&&e.name==='AbortError')return}
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ONboard-bitacora.pdf';document.body.appendChild(a);a.click();a.remove()}
+let dingAt=0;
 /* ===== ONboard 2.3 · exprés, favoritos, retos, objetivos, copia y más ===== */
 Object.assign(IC,{flag:'<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/>',trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 20h8M9.5 17h5"/>',expand:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',save:'<path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 20h14"/>',open:'<path d="M12 20V9M7 14l5-5 5 5"/><path d="M5 4h14"/>',repeat:'<path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/>'});
 S.favs=S.favs||[];S.prefs.goalD=S.prefs.goalD||3;S.prefs.goalDk=S.prefs.goalDk||'vuelos';S.prefs.expOrder=S.prefs.expOrder||'last';S.retoDone=S.retoDone||[];
@@ -3952,7 +3954,7 @@ function arrivalDing(){if(S.prefs.arrAlert===false)return;try{navigator.vibrate&
  if(AU.routed){g.connect(AU.master);const m=AU.master.gain,prev=S.prefs.muted?0:(S.prefs.vol!=null?S.prefs.vol:1);m.cancelScheduledValues(t);m.setValueAtTime(Math.max(m.value,.9),t);m.setTargetAtTime(prev,t+3.4,.3)}else g.connect(c.destination);
  const tone=(at,f)=>{for(const[k,a]of[[1,1],[2,.25],[3,.08]]){const o=c.createOscillator(),e=c.createGain();o.type='sine';o.frequency.value=f*k;e.gain.setValueAtTime(0,t+at);e.gain.linearRampToValueAtTime(.32*a,t+at+.012);e.gain.exponentialRampToValueAtTime(.0008,t+at+1.5);o.connect(e);e.connect(g);o.start(t+at);o.stop(t+at+1.6)}};
  tone(0,880);tone(.55,698.5);tone(1.5,880);tone(2.05,698.5)}
-{const ld=land;land=function(...a){ld.apply(this,a);try{arrivalDing()}catch(e){}const T=S.trip;if(T&&T.layEnd&&!T.layWait){T.layDur=Math.max(1e4,T.layEnd-Date.now());T.layWait=1;save()}}}
+{const ld=land;land=function(...a){if(S.prefs.arrAlert!==false)dingAt=Date.now()+1900;ld.apply(this,a);try{arrivalDing()}catch(e){}const T=S.trip;if(T&&T.layEnd&&!T.layWait){T.layDur=Math.max(1e4,T.layEnd-Date.now());T.layWait=1;save()}}}
 {const lt=SCR.lay.tick;SCR.lay.tick=function(t){const T=S.trip;if(T&&T.layWait&&T.layDur)T.layEnd=Date.now()+T.layDur;if(T&&!T.layWait&&T.layEnd&&T.layEnd-Date.now()<=0&&!T.dinged){T.dinged=1;try{arrivalDing()}catch(e){}}return lt.call(this,t)}}
 {const le=SCR.lay.enter;SCR.lay.enter=function(){le.call(this);const T=S.trip;if(!T)return;T.dinged=0;const go2=$('#ly-go');let b=$('#ly-start');if(!b){go2.insertAdjacentHTML('beforebegin','<button class="btn glow" id="ly-start">Empezar descanso</button>');b=$('#ly-start')}
  const sync=()=>{const w=!!T.layWait;b.style.display=w?'':'none';go2.classList.toggle('glow',!w);go2.classList.toggle('sec',w);const l=$('.lyring span');if(l)l.textContent='de descanso'};sync();
@@ -4193,6 +4195,13 @@ function zenFit(){const s=$('#s-flight');if(!s)return;const sub=$('.fhud .sub',s
 /* --- Atajos: si hay enlace de iCloud, se instala directamente en la app Atajos --- */
 const SCL={on:'https://www.icloud.com/shortcuts/2c2d40de9ac241b5bc352460ce7f37b8',fin:'https://www.icloud.com/shortcuts/b09006be00ea4d71a95e9713f5237d29'};
 {const isc=instShortcut;instShortcut=function(u){const fin=u===SC_FIN||u==='fin',l=SCL[fin?'fin':'on'];if(l){try{location.href=l}catch(e){window.open(l,'_blank')}return}isc(u)}}
+/* --- al aterrizar: primero el ding-dong, después el comandante --- */
+{const ck=capKeys;capKeys=function(...a){const w=dingAt-Date.now();if(w>0){setTimeout(()=>ck.apply(this,a),w);return}return ck.apply(this,a)}}
+/* --- atajos: abrir el enlace de iCloud fuera de la app (en Safari), que es quien lo pasa a Atajos --- */
+{const isc=instShortcut;instShortcut=function(u){const fin=u===SC_FIN||u==='fin',l=SCL[fin?'fin':'on'];if(!l)return isc(u);
+ openSheet(`<h3>Instalar «${fin?'ONboard fin':'ONboard'}»</h3><div class="howto"><p>Se abrirá la página del atajo. Toca <b>Obtener atajo</b> y después <b>Añadir atajo</b>.</p><p class="muted">Si sale «Error al cargar la galería»: comprueba que tienes la app <b>Atajos</b> instalada y la sesión de iCloud iniciada, o copia el enlace y ábrelo en Safari.</p></div><button class="btn glow" id="si-go">Abrir el atajo</button><button class="mini" id="si-cp" style="display:block;margin:12px auto 0">Copiar el enlace</button>`,c=>{
+  $('#si-go',c).onclick=()=>{const w=window.open(l,'_blank');if(!w)location.href=l;closeSheet()};
+  $('#si-cp',c).onclick=async()=>{try{await navigator.clipboard.writeText(l);toast('Enlace copiado. Pégalo en Safari.')}catch(e){prompt('Copia este enlace',l)}}})}}
 /* ===== ONboard · MODO CLASE (pantalla del profesor y vista de alumnos) ===== */
 const CLQ=new URLSearchParams(location.search),CLSMODE=CLQ.has('clase')?'prof':CLQ.has('ver')?'ver':null;
 if(CLSMODE){
