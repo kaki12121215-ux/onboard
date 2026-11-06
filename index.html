@@ -1227,7 +1227,7 @@ body.clsmode.clspass #p-edit,body.clsmode.clspass #p-note,body.clsmode.clspass .
 
 <script>
 'use strict';
-const APPV='2.5.1 (5 nov)';
+const APPV='2.5.2 (5 nov)';
 /* ===== utilidades ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -3966,7 +3966,9 @@ restSheet=function(m){openSheet(`<div style="text-align:center"><div class="cap"
 /* ===== VOLAR JUNTOS (sencillo): un código de 4 letras, una torre para todos ===== */
 const TOWER='https://script.google.com/macros/s/AKfycbyzpvlAg6q78MdW8JeElH-hoXIZUkbPGJPF2oaDZlng6qIGT5CmwP4UBbPav1ZHWGQH7Q/exec';
 const twURL=()=>S.prefs.tower||(TOWER.startsWith('https://')?TOWER:'');
-async function tw(q){const u=twURL();if(!u)throw new Error('notower');const r=await fetch(u+'?'+new URLSearchParams(Object.assign({id:S.dev,n:liveName()},q)),{cache:'no-store'});return r.json()}
+let twN=0;function twJsonp(url){return new Promise((res,rej)=>{const cb='__tw'+(++twN),s=document.createElement('script'),to=setTimeout(()=>{fin();rej(new Error('timeout'))},15000);function fin(){clearTimeout(to);delete window[cb];s.remove()}window[cb]=j=>{fin();res(j)};s.onerror=()=>{fin();rej(new Error('red'))};s.src=url+'&cb='+cb;document.head.appendChild(s)})}
+async function tw(q){const u=twURL();if(!u)throw new Error('notower');const url=u+'?'+new URLSearchParams(Object.assign({id:S.dev,n:liveName()},q));
+ try{const r=await fetch(url,{cache:'no-store',redirect:'follow'});const t=await r.text();return JSON.parse(t)}catch(e){return await twJsonp(url+'&_='+Date.now())}}
 const TJ={code:null,poll:null,host:false};
 function togStart(){if(!twURL()){toast('Volar juntos aún no está activado');return}if(S.flight){toast('Ya estás volando');return}
  openSheet(`<h3>Volar juntos</h3><div class="muted" style="font-size:14px;margin:-6px 0 14px">Volad a la vez, en directo, cada uno en su móvil.</div>
