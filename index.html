@@ -1276,7 +1276,7 @@ body.clsmode.clspass #p-edit,body.clsmode.clspass #p-note,body.clsmode.clspass .
 
 <script>
 'use strict';
-const APPV='2.9.5 (10 nov)';
+const APPV='2.9.6 (10 nov)';
 /* ===== utilidades ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -4509,7 +4509,7 @@ function sideUpd(f,ph,now){const tE=$c('#fl-t');if(!tE)return;const B=AP[f.to];l
 async function landNow(early){const f=CL.f;if(!f||f.ph==='landed')return;if(early)f.end=Date.now();f.ph='landed';f.landAt=Date.now();clSaveF();cap('land',`Bienvenidos a ${AP[f.to].n}. Gracias por volar con ONboard.`,'land');pushLive(1);show('landed');finishClass()}
 async function finishClass(){const f=CL.f;if(!f||f.sent)return;if(CL.sending)return CL.sending;CL.sending=finishReal(f);try{return await CL.sending}finally{CL.sending=null}}
 async function finishReal(f){const g=grp(f.g);const visited=g?g.pass.map(p=>p.to):[];const nx=worldPick(AP[f.to],[...visited,f.to,f.from]);f.next=nx?nx.c:'';
- const min=Math.max(1,Math.round(((f.landAt||Date.now())-(f.start||Date.now()))/6e4));const body={g:f.g,subj:f.subj,sesion:f.sesion,horario:f.horario,from:f.from,to:f.to,fromN:AP[f.from].n,toN:AP[f.to].n,min,next:f.next,mail:f.mail,tot:f.al.length,inc:f.al.filter(x=>x.st!=='ok').map(x=>[x.n,x.a,x.st,x.at||'']),al:f.al.map(x=>[x.n,x.a,x.st,x.at||''])};
+ const min=Math.max(1,Math.round(((f.landAt||Date.now())-(f.start||Date.now()))/6e4));const body={g:f.g,subj:f.subj,sesion:f.sesion,horario:f.horario,from:f.from,to:f.to,fromN:AP[f.from].n,toN:AP[f.to].n,min,next:f.next,mail:f.mail,tot:f.al.length,inc:f.al.filter(x=>x.st!=='ok').map(x=>[x.n,x.a,x.st,x.at||'']),ros:f.al.map(x=>[x.n,x.a,x.st,x.at||''])};
  f.tried=1;clSaveF();try{const j=await api('finish',{t:f.t,f:body});if(j.ok){f.sent=1;clSaveF();if(g){g.pass.push({d:'hoy',s:f.sesion,from:f.from,to:f.to,min,today:1});g.pos=f.to;g.next=f.next;g.nextSt='propuesto'}const st=$c('#ld-st');if(st)st.textContent=j.mail?'Asistencia enviada a tu correo':'Clase guardada en tu hoja'}}catch(e){if(e&&e.message==='sin conexión'){f.tried=0;clSaveF()}clToast('No se pudo guardar la clase. Lo reintento al volver al panel.')}}
 function vLanded(){const f=CLSMODE==='ver'?CL.ver.f:CL.f;if(!f)return;const B=AP[f.to],g={name:f.g,subj:f.subj,color:f.color},cities=CLSMODE==='prof'&&grp(f.g)?new Set([...grp(f.g).pass.map(p=>p.to),f.to]).size:'';const min=Math.max(1,Math.round(((f.landAt||f.end)-(f.start||f.end))/6e4));
  MX.clearRect(0,0,1920,1080);UI.innerHTML=`<div class="k-land"><div class="k-pcw">${PC(pcStyle(B.c),B.c)}</div><div class="lt"><span class="k-cap g">● Aterrizado</span><h1>Bienvenidos<br>a ${esc(B.n)}</h1><div class="k-sub">${esc(f.g)}${f.subj?' · '+esc(f.subj):''}</div><div class="k-nums" style="grid-template-columns:repeat(${cities?3:2},auto)"><b>${min}</b><b>${Math.round(f.km).toLocaleString('es-ES')}</b>${cities?`<b>${cities}</b>`:''}<span>Min de vuelo</span><span>Km</span>${cities?'<span>Ciudades</span>':''}</div><div class="k-stamp">${sic2('check','#6BE0A6',26)}Nuevo sello en el pasaporte del grupo</div>
