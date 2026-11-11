@@ -882,6 +882,59 @@ body.xdrag{-webkit-user-select:none;user-select:none}.xg.ed .xc{-webkit-user-sel
 /* 2.9 · animación de arranque */
 #splash{position:fixed;inset:0;z-index:9999;pointer-events:none;font-family:inherit}#splash svg{display:block}
 #splash:not(.go){background:#07080d}#splash.out{transition:opacity .3s;opacity:0}
+/* 2.9.7 · Feedback */
+#s-fbk .fk-pg{padding-bottom:calc(var(--sb) + 120px)}
+.fk-nav{display:flex;align-items:center;justify-content:space-between;height:44px}
+.fk-back{display:flex;align-items:center;gap:2px;color:var(--ambar);font-size:17px;margin-left:-6px}
+.fk-pill{height:38px;min-width:38px;border:1px solid var(--ring);background:var(--glass);border-radius:999px;padding:0 13px;font-size:15px;display:flex;gap:7px;align-items:center;justify-content:center}
+#fk-drv{padding:0;width:38px}
+.fk-h1{font-size:32px;font-weight:700;letter-spacing:-.5px;margin:8px 0 4px}
+.fk-sync{font-size:13px;color:var(--niebla);display:flex;align-items:center;gap:7px;margin-bottom:14px;text-align:left}.fk-sync u{color:var(--ambar);text-decoration:none}
+.fk-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}.fk-dot.off{background:#5a5e74}.fk-dot.up{background:var(--ambar);animation:fkp 1.2s ease-in-out infinite}.fk-dot.bad{background:var(--bad)}
+@keyframes fkp{50%{opacity:.35}}
+.fk-seg{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--ring);border-radius:14px;padding:3px;margin-bottom:14px}
+.fk-seg button{flex:1;text-align:center;padding:8px 0;font-size:14.5px;color:var(--niebla);border-radius:11px}
+.fk-seg button.on{background:#262a3c;color:var(--texto);font-weight:500}.fk-seg i{font-style:normal;opacity:.6;margin-left:4px}
+.fk-card{display:block;width:100%;text-align:left;background:var(--glass);border:1px solid var(--ring);border-radius:22px;padding:14px 15px 15px;margin-bottom:11px}
+.fk-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.fk-when{font-size:13px;color:var(--niebla)}
+.fk-tag{font-size:12px;font-weight:500;color:var(--ambar);border:1px solid rgba(255,181,71,.35);background:rgba(255,181,71,.08);padding:3px 9px;border-radius:999px;white-space:nowrap}
+.fk-tx{display:block;font-size:15px;line-height:1.38;white-space:pre-wrap;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
+.fk-card.done .fk-tx{color:var(--niebla)}
+.fk-th{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+.fk-t{width:58px;height:78px;border-radius:10px;background:#1a1d2a center/cover;border:1px solid var(--ring);position:relative;overflow:hidden;display:block}
+.fk-t.v::after,.fk-g.v::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.3)}
+.fk-play{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:2;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;padding-left:2px}
+.fk-dur{position:absolute;right:5px;bottom:3px;z-index:2;font-size:10.5px;font-weight:500;color:#fff}
+.fk-ok{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ok);font-weight:500;margin-top:10px}
+.fk-empty{color:var(--niebla);font-size:14.5px;line-height:1.45;text-align:center;padding:40px 18px}
+.fk-fab{position:absolute;right:18px;bottom:calc(var(--sb) + 26px);z-index:7;height:56px;padding:0 22px;border-radius:999px;background:var(--ambar);color:#1a1205;font-weight:500;font-size:16.5px;display:flex;align-items:center;gap:8px;box-shadow:0 10px 30px rgba(255,181,71,.3)}
+.fk-sh{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}.fk-sh b{font-size:17px;font-weight:500}.fk-sh button{color:var(--ambar);font-size:16px}.fk-sh span{width:70px}
+.fk-ta{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--ring);border-radius:16px;padding:13px 14px;height:118px;font:inherit;font-size:16px;line-height:1.4;color:var(--texto);outline:0;resize:none}
+.fk-ta:focus{border-color:rgba(255,181,71,.5)}
+.fk-h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--niebla);font-weight:700;margin:18px 0 9px}
+.fk-chips{display:flex;flex-wrap:wrap;gap:7px}
+.fk-chips button{font-size:13.5px;padding:7px 12px;border-radius:999px;border:1px solid var(--ring);background:rgba(255,255,255,.04)}
+.fk-chips button.on{background:var(--ambar);color:#1a1205;border-color:var(--ambar);font-weight:500}
+.fk-grid{display:flex;gap:9px;flex-wrap:wrap}
+.fk-g{width:76px;height:100px;border-radius:12px;background:#1a1d2a center/cover;border:1px solid var(--ring);position:relative;overflow:hidden;display:block}
+.fk-x{position:absolute;top:5px;right:5px;z-index:3;width:24px;height:24px;border-radius:50%;background:rgba(10,11,16,.85);border:1px solid rgba(255,255,255,.25);display:grid;place-items:center}
+.fk-add{border:1.5px dashed #3a3e50;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:12px;color:var(--niebla);line-height:1.2}
+.fk-warn{margin-top:11px;display:flex;gap:10px;align-items:flex-start;background:rgba(255,69,58,.08);border:1px solid rgba(255,69,58,.3);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.35;color:#ffb3ad}.fk-warn svg{flex:none;margin-top:1px}
+.fk-save{margin-top:20px}.fk-save:disabled{opacity:.5}
+.fk-foot{text-align:center;font-size:12px;color:var(--niebla);margin-top:10px}
+.fk-dtx{font-size:16px;line-height:1.45;white-space:pre-wrap;margin-bottom:14px}
+.fk-names{font-size:12px;color:var(--niebla);margin-top:9px}
+.fk-kp{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.fk-kp div{background:var(--glass);border:1px solid var(--ring);border-radius:16px;padding:11px 14px}
+.fk-kp b{font-size:26px;font-weight:700;display:block;letter-spacing:-.5px}.fk-kp span{font-size:13px;color:var(--niebla)}
+.fk-tree{background:rgba(255,255,255,.03);border:1px solid var(--ring);border-radius:16px;padding:12px 14px;font-size:13.5px;line-height:1.75;max-height:200px;overflow-y:auto}
+.fk-tree .f{display:flex;align-items:center;gap:8px;word-break:break-all}.fk-tree .i1{padding-left:22px}.fk-tree .i2{padding-left:46px;color:var(--niebla)}
+.fk-in{font-size:15px;height:48px}
+.mini.fk-pri{background:var(--ambar);color:#1a1205;border-color:var(--ambar)}
+.fk-view{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.92);display:grid;place-items:center;padding:calc(var(--st) + 50px) 12px calc(var(--sb) + 20px)}
+.fk-view img,.fk-view video{max-width:100%;max-height:100%;border-radius:12px}
+.fk-vx{position:absolute;top:calc(var(--st) + 12px);right:14px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center}
 /* ===== MODO CLASE (16:9) ===== */
 body.clsmode{background:#05060b!important;overflow:hidden}
 body.clsmode #app,body.clsmode #nav,body.clsmode #sheet,body.clsmode #toast{display:none!important}
@@ -1276,7 +1329,7 @@ body.clsmode.clspass #p-edit,body.clsmode.clspass #p-note,body.clsmode.clspass .
 
 <script>
 'use strict';
-const APPV='2.9.6 (10 nov)';
+const APPV='2.9.7 (11 nov)';
 /* ===== utilidades ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const TAU=Math.PI*2,D2R=Math.PI/180;
@@ -4266,6 +4319,193 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&!S.flight)
 /* --- animación de arranque (solo al abrir la app, no al volver de segundo plano) --- */
 {const sp=document.getElementById('splash');if(sp){const qq=new URLSearchParams(location.search);if(qq.has('clase')||qq.has('ver')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){sp.remove()}else{let done=false;const end=fast=>{if(done)return;done=true;if(fast){sp.classList.add('out');setTimeout(()=>sp.remove(),320)}else sp.remove()};
  requestAnimationFrame(()=>requestAnimationFrame(()=>{sp.classList.add('go');try{sp.querySelector('#spgo').beginElement()}catch(e){end(true);return}setTimeout(()=>end(false),2450)}));sp.style.pointerEvents='auto';sp.addEventListener('pointerdown',()=>end(true))}}}
+/* ===== 2.9.7 · Feedback: notas con capturas y vídeos, copia en tu Drive y exportación en zip ===== */
+Object.assign(IC,{
+ fbk:'<path d="M4.5 5.5h15v10h-8l-4.5 3.5v-3.5H4.5z"/><path d="M8.5 9.5h7M8.5 12.5h4.5"/>',
+ dl:'<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/>',
+ fold:'<path d="M3 6.5h6.5l2 2.5H21v10H3z"/>',
+ file:'<path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4"/>',
+ alert:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.5M12 16.2v.3"/>'
+});
+const FB_SECS=['General','Inicio','Destinos','Asientos','Vuelo','Aterrizaje','Pasaporte','Estadísticas','Perfil','Ajustes','Volar juntos','Modo clase'];
+/* Notas que han entrado en una versión: se marcan como hechas al actualizar. Ej.: {'2.9.8':['F003','F007']} */
+const FB_HECHAS={};
+const FB_KEY='onboard.fb',FB_MAXDUR=65,FB_MAXMB=250,FB_CHUNK=4*1024*1024;
+let FB=(()=>{try{return JSON.parse(localStorage.getItem(FB_KEY))||null}catch(e){return null}})()||{seq:0,notes:[],del:[],url:'',code:'',last:0,err:''};
+FB.notes=FB.notes||[];FB.del=FB.del||[];
+function fbSave(){try{localStorage.setItem(FB_KEY,JSON.stringify(FB));return true}catch(e){toast('No hay espacio para guardar la nota');return false}}
+const fbVer=v=>String(v).split(' ')[0].split('.').map(Number);
+const fbVle=(a,b)=>{const x=fbVer(a),y=fbVer(b);for(let i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)<(y[i]||0)}return true};
+(()=>{let ch=0;for(const v in FB_HECHAS){if(!fbVle(v,APPV))continue;for(const id of FB_HECHAS[v]){const n=FB.notes.find(z=>z.id===id);if(n&&n.st!=='h'){n.st='h';n.ver=v;n.dirty=1;ch=1}}}if(ch)fbSave()})();
+
+/* ---- archivos en el iPhone (IndexedDB) ---- */
+let fbDBp=null;
+function fbDB(){return fbDBp||(fbDBp=new Promise((ok,ko)=>{const r=indexedDB.open('onboard-fb',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error)}))}
+async function fbPut(k,blob){const db=await fbDB();return new Promise((ok,ko)=>{const t=db.transaction('f','readwrite');t.objectStore('f').put(blob,k);t.oncomplete=()=>ok();t.onerror=()=>ko(t.error);t.onabort=()=>ko(t.error||new Error('abort'))})}
+async function fbGet(k){const db=await fbDB();return new Promise((ok,ko)=>{const r=db.transaction('f').objectStore('f').get(k);r.onsuccess=()=>ok(r.result||null);r.onerror=()=>ko(r.error)})}
+async function fbDelF(k){const db=await fbDB();return new Promise(ok=>{const t=db.transaction('f','readwrite');t.objectStore('f').delete(k);t.oncomplete=ok;t.onerror=ok})}
+
+/* ---- utilidades ---- */
+const fbMB=b=>b>=1048576?(b/1048576).toFixed(b>=1048576*10?0:1).replace('.',',')+' MB':Math.max(1,Math.round(b/1024))+' KB';
+const fbDur=s=>Math.floor(s/60)+':'+pad(Math.round(s%60));
+const DSEM=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],MESC=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function fbWhen(ts){const d=new Date(ts),n=new Date(),d0=new Date(d).setHours(0,0,0,0),n0=new Date(n).setHours(0,0,0,0),dd=Math.round((n0-d0)/864e5),hm=pad(d.getHours())+':'+pad(d.getMinutes());
+ if(dd===0)return 'Hoy, '+hm;if(dd===1)return 'Ayer, '+hm;if(dd<7)return DSEM[d.getDay()]+' '+d.getDate();return d.getDate()+' '+MESC[d.getMonth()]+(d.getFullYear()!==n.getFullYear()?' '+d.getFullYear():'')}
+const fbFull=ts=>{const d=new Date(ts);return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes())};
+const fbExt=(mime,name)=>{const m=(name||'').match(/\.([a-z0-9]{2,5})$/i);if(m)return m[1].toLowerCase();return ({'image/png':'png','image/jpeg':'jpg','image/heic':'heic','image/gif':'gif','image/webp':'webp','video/quicktime':'mov','video/mp4':'mp4'})[mime]||(String(mime).startsWith('video')?'mov':'jpg')};
+function fbNames(n){let i=0,v=0;return (n.files||[]).map(f=>f.t==='vid'?`video_${++v}.${f.ext}`:`captura_${++i}.${f.ext}`)}
+const fbFolder=(nn,sec)=>pad(nn)+'_'+sec.replace(/\s+/g,'_');
+function fbAgo(ts){const m=Math.round((Date.now()-ts)/6e4);if(m<1)return 'ahora mismo';if(m<60)return 'hace '+m+' min';const h=Math.round(m/60);if(h<24)return 'hace '+h+' h';return fbWhen(ts).toLowerCase()}
+const fbPend=()=>FB.notes.filter(n=>n.st!=='h').length;
+
+/* miniaturas y duración */
+function fbThumbImg(blob){return new Promise(ok=>{const u=URL.createObjectURL(blob),im=new Image();im.onload=()=>{const c=document.createElement('canvas'),s=Math.min(1,240/Math.max(im.naturalWidth,im.naturalHeight));c.width=Math.max(1,Math.round(im.naturalWidth*s));c.height=Math.max(1,Math.round(im.naturalHeight*s));c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.7))};im.onerror=()=>{URL.revokeObjectURL(u);ok('')};im.src=u})}
+function fbVidInfo(blob){return new Promise(ok=>{const u=URL.createObjectURL(blob),v=document.createElement('video');let done=0;const fin=(th)=>{if(done)return;done=1;const d=isFinite(v.duration)?v.duration:0;URL.revokeObjectURL(u);v.removeAttribute('src');ok({dur:d,th:th||''})};
+ v.muted=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='auto';
+ v.onloadedmetadata=()=>{try{v.currentTime=Math.min(.5,(v.duration||1)/2)}catch(e){fin('')}};
+ v.onseeked=()=>{try{const c=document.createElement('canvas'),s=Math.min(1,240/Math.max(v.videoWidth||1,v.videoHeight||1));c.width=Math.max(1,Math.round((v.videoWidth||160)*s));c.height=Math.max(1,Math.round((v.videoHeight||90)*s));c.getContext('2d').drawImage(v,0,0,c.width,c.height);fin(c.toDataURL('image/jpeg',.7))}catch(e){fin('')}};
+ v.onerror=()=>fin('');setTimeout(()=>fin(''),8000);v.src=u})}
+
+/* ---- pantalla ---- */
+(()=>{const s=document.createElement('section');s.className='scr';s.id='s-fbk';s.innerHTML=`<div class="page fk-pg" id="fk-page"></div><button class="fk-fab" id="fk-new">${sic2('plus','#1a1205',18)}<span>Nota nueva</span></button>`;$('#app').insertBefore(s,$('#nav'))})();
+if(!IC.plus)IC.plus='<path d="M12 5v14M5 12h14"/>';
+let fbTab='p';
+SCR.fbk={el:$('#s-fbk'),enter(){fbRender();fbSync()}};
+function fbRender(){const pg=$('#fk-page');if(!pg)return;const N=FB.notes.slice().sort((a,b)=>b.ts-a.ts),P=N.filter(n=>n.st!=='h'),H=N.filter(n=>n.st==='h'),L=fbTab==='p'?P:fbTab==='h'?H:N;
+ pg.innerHTML=`<div class="fk-nav"><button class="fk-back" id="fk-back">${sic2('back','#FFB547',22)}<span>Perfil</span></button><div style="display:flex;gap:8px"><button class="fk-pill" id="fk-drv" aria-label="Drive">${sic2('gear','#F3F3F6',17)}</button><button class="fk-pill" id="fk-exp">${sic2('dl','#F3F3F6',17)}<span>Exportar</span></button></div></div>
+ <h1 class="fk-h1">Feedback</h1><button class="fk-sync" id="fk-sync">${fbSyncTxt()}</button>
+ <div class="fk-seg"><button data-t="p" class="${fbTab==='p'?'on':''}">Pendientes<i>${P.length}</i></button><button data-t="h" class="${fbTab==='h'?'on':''}">Hechas<i>${H.length}</i></button><button data-t="a" class="${fbTab==='a'?'on':''}">Todas<i>${N.length}</i></button></div>
+ <div id="fk-list">${L.length?L.map(fbCard).join(''):`<div class="fk-empty">${fbTab==='h'?'Aún no hay notas hechas.':'No hay notas. Pulsa «Nota nueva» para apuntar una mejora o un fallo, con capturas o vídeos.'}</div>`}</div>`;
+ $('#fk-back').onclick=()=>go('prof');$('#fk-exp').onclick=fbExport;$('#fk-drv').onclick=fbDrive;$('#fk-sync').onclick=fbDrive;
+ $$('.fk-seg button',pg).forEach(b=>b.onclick=()=>{fbTab=b.dataset.t;fbRender()});
+ $$('.fk-card',pg).forEach(c=>c.onclick=()=>fbDetail(c.dataset.id))}
+function fbThumbs(n,cls){return (n.files||[]).map(f=>`<span class="${cls}${f.t==='vid'?' v':''}" style="${f.th?`background-image:url(${f.th})`:''}">${f.t==='vid'?`<span class="fk-play">${sic2('play','#05060C',11)}</span><span class="fk-dur">${fbDur(f.dur||0)}</span>`:''}</span>`).join('')}
+function fbCard(n){return `<button class="fk-card${n.st==='h'?' done':''}" data-id="${n.id}"><span class="fk-meta"><span class="fk-when">${fbWhen(n.ts)}</span><span class="fk-tag">${esc(n.sec)}</span></span>
+ <span class="fk-tx">${esc(n.txt)}</span>${n.files&&n.files.length?`<span class="fk-th">${fbThumbs(n,'fk-t')}</span>`:''}${n.st==='h'?`<span class="fk-ok">${sic2('check','#30D158',15)}Hecha${n.ver?' en '+esc(n.ver):''}</span>`:''}</button>`}
+$('#fk-new').onclick=()=>fbNew();
+/* fila en Perfil */
+{const pr=profRender;profRender=function(){pr();if($('#pf-fb'))return;const a=$('#pf-tog')||$$('#pf-page .lst .li').pop();if(!a)return;const p=fbPend();
+ a.insertAdjacentHTML('afterend',`<button class="li" id="pf-fb"><span class="lic">${sic2('fbk','#FFB547')}</span><span class="lt">Feedback<small>${p?p+(p===1?' nota pendiente':' notas pendientes'):'Apunta mejoras con capturas y vídeos'}</small></span>${sic2('chev','#5a5e74',16)}</button>`);$('#pf-fb').onclick=()=>go('fbk')}}
+
+/* ---- nota nueva ---- */
+let FBD=null;
+function fbNew(){if(!FBD)FBD={txt:'',sec:'',files:[]};
+ openSheet(`<div class="fk-sh"><button id="fn-x">Cancelar</button><b>Nota nueva</b><span></span></div>
+ <textarea class="fk-ta" id="fn-t" placeholder="¿Qué has visto o qué mejorarías?">${esc(FBD.txt)}</textarea>
+ <div class="fk-h4">Sección</div><div class="fk-chips" id="fn-s">${FB_SECS.map(s=>`<button class="${s===FBD.sec?'on':''}">${s}</button>`).join('')}</div>
+ <div class="fk-h4">Capturas y vídeos</div><div class="fk-grid" id="fn-g"></div><div id="fn-w"></div>
+ <input type="file" id="fn-f" accept="image/*,video/*" multiple hidden>
+ <button class="btn fk-save" id="fn-ok">Guardar nota</button><div class="fk-foot" id="fn-foot">${FB.url?'Se sube a tu Drive al guardar · sin conexión, se sube luego':'Se guarda en este iPhone · conecta tu Drive con la rueda de arriba'}</div>`,c=>{
+  const ta=$('#fn-t',c);ta.oninput=()=>{FBD.txt=ta.value;$('#fn-w',c).innerHTML=''};
+  $$('#fn-s button',c).forEach(b=>b.onclick=()=>{FBD.sec=b.textContent;$$('#fn-s button',c).forEach(x=>x.classList.toggle('on',x===b));$('#fn-w',c).innerHTML=''});
+  $('#fn-x',c).onclick=()=>{FBD=null;closeSheet()};
+  const inp=$('#fn-f',c);inp.onchange=async()=>{const fs=[...inp.files];inp.value='';for(const f of fs)await fbAdd(f,c)};
+  fbGrid(c);$('#fn-ok',c).onclick=()=>fbSaveNote(c)})}
+function fbWarn(c,t){$('#fn-w',c).innerHTML=`<div class="fk-warn">${sic2('alert','#FF453A',18)}<span>${t}</span></div>`}
+function fbGrid(c){const g=$('#fn-g',c);if(!g)return;g.innerHTML=FBD.files.map((f,i)=>`<span class="fk-g${f.t==='vid'?' v':''}" style="${f.th?`background-image:url(${f.th})`:''}"><button class="fk-x" data-i="${i}" aria-label="Quitar">${sic2('close','#fff',11)}</button>${f.t==='vid'?`<span class="fk-play">${sic2('play','#05060C',11)}</span><span class="fk-dur">${fbDur(f.dur||0)}</span>`:''}</span>`).join('')+`<button class="fk-g fk-add" id="fn-add">${sic2('plus','#A9ABBC',22)}<span>Cámara<br>o Fotos</span></button>`;
+ $('#fn-add',c).onclick=()=>$('#fn-f',c).click();$$('.fk-x',g).forEach(b=>b.onclick=e=>{e.stopPropagation();FBD.files.splice(+b.dataset.i,1);fbGrid(c)})}
+async function fbAdd(file,c){const vid=String(file.type).startsWith('video')||/\.(mov|mp4|m4v)$/i.test(file.name),img=String(file.type).startsWith('image')||/\.(png|jpe?g|heic|gif|webp)$/i.test(file.name);
+ if(!vid&&!img){fbWarn(c,`«${esc(file.name)}» no es una foto ni un vídeo.`);return}
+ if(file.size>FB_MAXMB*1048576){fbWarn(c,`Ese ${vid?'vídeo':'archivo'} ocupa ${fbMB(file.size)}. El máximo es ${FB_MAXMB} MB: ${vid?'recórtalo en Fotos o grábalo en menos calidad':'prueba con una captura normal'}.`);return}
+ const it={t:vid?'vid':'img',blob:file,mime:file.type||(vid?'video/quicktime':'image/jpeg'),ext:fbExt(file.type,file.name),size:file.size,dur:0,th:''};
+ if(vid){const inf=await fbVidInfo(file);it.dur=inf.dur;it.th=inf.th;if(inf.dur>FB_MAXDUR){fbWarn(c,`Ese vídeo dura ${fbDur(inf.dur)}. El máximo es 1 minuto: recórtalo en Fotos y vuelve a añadirlo.`);return}}
+ else it.th=await fbThumbImg(file);
+ if(!FBD)return;FBD.files.push(it);$('#fn-w',c).innerHTML='';fbGrid(c)}
+async function fbSaveNote(c){const txt=(FBD.txt||'').trim();if(!txt){fbWarn(c,'Escribe qué has visto o qué mejorarías.');$('#fn-t',c).focus();return}if(!FBD.sec){fbWarn(c,'Elige la sección a la que se refiere.');return}
+ const b=$('#fn-ok',c);if(b.disabled)return;b.disabled=true;b.textContent='Guardando…';
+ try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})}catch(e){}
+ const seq=FB.seq+1,id='F'+String(seq).padStart(3,'0'),files=[];
+ try{for(let i=0;i<FBD.files.length;i++){const f=FBD.files[i],k=id+'_'+i+'_'+Date.now();await fbPut(k,f.blob);files.push({k,t:f.t,mime:f.mime,ext:f.ext,size:f.size,dur:f.dur,th:f.th,up:0})}}
+ catch(e){for(const f of files)fbDelF(f.k);b.disabled=false;b.textContent='Guardar nota';fbWarn(c,'No hay espacio en el iPhone para guardar estos archivos. Quita algún vídeo o libera espacio.');return}
+ FB.seq=seq;FB.notes.push({id,ts:Date.now(),sec:FBD.sec,txt,st:'p',ver:'',files,dirty:1});
+ if(!fbSave()){FB.seq--;FB.notes.pop();for(const f of files)fbDelF(f.k);b.disabled=false;b.textContent='Guardar nota';fbWarn(c,'No hay espacio para guardar la nota.');return}
+ FBD=null;closeSheet();toast('Nota guardada');fbTab='p';fbRender();fbSync()}
+
+/* ---- detalle de una nota ---- */
+function fbDetail(id){const n=FB.notes.find(z=>z.id===id);if(!n)return;const nm=fbNames(n);
+ openSheet(`<div class="fk-meta" style="margin-bottom:10px"><span class="fk-when">${fbWhen(n.ts)} · ${n.id}</span><span class="fk-tag">${esc(n.sec)}</span></div>
+ <div class="fk-dtx">${esc(n.txt)}</div>${n.files.length?`<div class="fk-grid fk-dg">${n.files.map((f,i)=>`<button class="fk-g${f.t==='vid'?' v':''}" data-i="${i}" style="${f.th?`background-image:url(${f.th})`:''}">${f.t==='vid'?`<span class="fk-play">${sic2('play','#05060C',11)}</span><span class="fk-dur">${fbDur(f.dur||0)}</span>`:''}</button>`).join('')}</div><div class="fk-names">${nm.join(' · ')}${n.files.some(f=>!f.up)&&FB.url?' · pendiente de subir a Drive':''}</div>`:''}
+ ${n.st==='h'?`<div class="fk-ok" style="margin:14px 0 0">${sic2('check','#30D158',15)}Hecha${n.ver?' en '+esc(n.ver):''}</div>`:''}
+ <button class="btn fk-save" id="fd-st" style="margin-top:18px">${n.st==='h'?'Volver a pendiente':'Marcar como hecha'}</button>
+ <button class="mini bd" id="fd-del" style="display:block;margin:14px auto 0">Borrar nota</button>`,c=>{
+  $$('.fk-dg .fk-g',c).forEach(b=>b.onclick=()=>fbView(n.files[+b.dataset.i]));
+  $('#fd-st',c).onclick=()=>{if(n.st==='h'){n.st='p';n.ver=''}else{n.st='h';n.ver=APPV.split(' ')[0]}n.dirty=1;fbSave();closeSheet();fbRender();fbSync()};
+  const d=$('#fd-del',c);d.onclick=()=>{if(!d.dataset.ok){d.dataset.ok=1;d.textContent='Pulsa otra vez para borrarla';return}
+   FB.notes=FB.notes.filter(z=>z!==n);for(const f of n.files)fbDelF(f.k);if(n.sync)FB.del.push(n.id);fbSave();closeSheet();fbRender();fbSync();toast('Nota borrada')}})}
+async function fbView(f){const b=await fbGet(f.k).catch(()=>null);if(!b){toast('No encuentro ese archivo en el iPhone');return}const u=URL.createObjectURL(b),o=document.createElement('div');o.className='fk-view';
+ o.innerHTML=(f.t==='vid'?`<video src="${u}" controls playsinline autoplay></video>`:`<img src="${u}" alt="">`)+`<button class="fk-vx" aria-label="Cerrar">${sic2('close','#fff',18)}</button>`;
+ document.body.appendChild(o);o.onclick=e=>{if(e.target===o||e.target.closest('.fk-vx')){URL.revokeObjectURL(u);o.remove()}}}
+
+/* ---- exportar ---- */
+function fbExport(){let all=0;const sel=()=>FB.notes.filter(n=>all||n.st!=='h').sort((a,b)=>a.ts-b.ts);
+ const paint=c=>{const L=sel(),fs=L.flatMap(n=>n.files),ni=fs.filter(f=>f.t==='img').length,nv=fs.length-ni,sz=fs.reduce((s,f)=>s+(f.size||0),0),d=new Date(),root=`ONboard_feedback_${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  let nn=0;const tree=L.map(n=>{nn++;return n.files.length?`<div class="f i1">${sic2('fold','#A9ABBC',16)}${esc(fbFolder(nn,n.sec))}</div><div class="i2">${fbNames(n).join(' · ')}</div>`:''}).join('');
+  $('#fe-b',c).innerHTML=`<div class="fk-kp"><div><b>${L.length}</b><span>${L.length===1?'nota':'notas'}</span></div><div><b>${ni}</b><span>${ni===1?'captura':'capturas'}</span></div><div><b>${nv}</b><span>${nv===1?'vídeo':'vídeos'}</span></div><div><b>${fbMB(sz+2048)}</b><span>en total</span></div></div>
+  <div class="fk-h4">Contenido del zip</div><div class="fk-tree"><div class="f">${sic2('fold','#FFB547',16)}${root}</div><div class="f i1">${sic2('file','#A9ABBC',15)}feedback.txt</div>${tree}</div>`;
+  $('#fe-ok',c).disabled=!L.length};
+ openSheet(`<div class="fk-sh"><button id="fe-x">Cerrar</button><b>Exportar feedback</b><span></span></div>
+ <div class="fk-seg"><button class="on" data-a="0">Solo pendientes</button><button data-a="1">Todas</button></div><div id="fe-b"></div>
+ <button class="btn fk-save" id="fe-ok">Descargar zip</button><div class="fk-foot">El zip se genera en el iPhone, sin servicios externos</div>`,c=>{
+  $('#fe-x',c).onclick=closeSheet;$$('.fk-seg button',c).forEach(b=>b.onclick=()=>{all=+b.dataset.a;$$('.fk-seg button',c).forEach(x=>x.classList.toggle('on',x===b));paint(c)});paint(c);
+  const ok=$('#fe-ok',c);ok.onclick=async()=>{if(ok.disabled)return;ok.disabled=true;ok.textContent='Preparando…';
+   try{const r=await fbZip(sel(),p=>{ok.textContent='Preparando… '+Math.round(p*100)+' %'});await fbDeliver(r.file);ok.textContent='Descargar zip'}
+   catch(e){ok.textContent='Descargar zip';toast(e&&e.message==='falta'?'Falta algún archivo en el iPhone':'No se ha podido crear el zip')}ok.disabled=false}})}
+const fbTxt=(L,root)=>{const d=new Date();let t=`ONboard · Feedback\r\nExportado: ${fbFull(d)} · versión ${APPV}\r\nNotas: ${L.length}\r\n\r\n`;
+ L.forEach((n,i)=>{const nm=fbNames(n),fo=fbFolder(i+1,n.sec);t+=`${pad(i+1)}. [${n.id}] ${fbFull(n.ts)} · ${n.sec} · ${n.st==='h'?'Hecha'+(n.ver?' en '+n.ver:''):'Pendiente'}\r\n${n.txt.replace(/\r?\n/g,'\r\n')}\r\n${nm.length?'Archivos: '+nm.map(x=>fo+'/'+x).join(', '):'Sin archivos'}\r\n\r\n`});return t};
+/* zip sin compresión, generado aquí mismo */
+const FB_CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function fbCrc(u8,c=0xFFFFFFFF){for(let i=0;i<u8.length;i++)c=FB_CRC[(c^u8[i])&255]^(c>>>8);return c}
+async function fbZip(L,prog){const d=new Date(),root=`ONboard_feedback_${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`,enc=new TextEncoder();
+ const ent=[{p:root+'/feedback.txt',blob:new Blob([enc.encode(fbTxt(L,root))])}];
+ L.forEach((n,i)=>{const nm=fbNames(n);n.files.forEach((f,j)=>ent.push({p:`${root}/${fbFolder(i+1,n.sec)}/${nm[j]}`,k:f.k,size:f.size}))});
+ const dt=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1))&0xFFFF,dd=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate())&0xFFFF;
+ const parts=[],cen=[];let off=0;const tot=ent.reduce((s,e)=>s+(e.size||1000),0);let done=0;
+ for(const e of ent){const blob=e.blob||await fbGet(e.k);if(!blob)throw new Error('falta');const u8=new Uint8Array(await blob.arrayBuffer());const crc=(fbCrc(u8)^0xFFFFFFFF)>>>0,name=enc.encode(e.p);
+  const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,dt,true);h.setUint16(12,dd,true);h.setUint32(14,crc,true);h.setUint32(18,u8.length,true);h.setUint32(22,u8.length,true);h.setUint16(26,name.length,true);h.setUint16(28,0,true);
+  parts.push(h.buffer,name,blob);
+  const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(10,0,true);c.setUint16(12,dt,true);c.setUint16(14,dd,true);c.setUint32(16,crc,true);c.setUint32(20,u8.length,true);c.setUint32(24,u8.length,true);c.setUint16(28,name.length,true);c.setUint32(42,off,true);
+  cen.push(c.buffer,name);off+=30+name.length+u8.length;done+=e.size||1000;prog&&prog(Math.min(1,done/tot))}
+ const cs=cen.reduce((s,x)=>s+x.byteLength,0),z=new DataView(new ArrayBuffer(22));z.setUint32(0,0x06054b50,true);z.setUint16(8,ent.length,true);z.setUint16(10,ent.length,true);z.setUint32(12,cs,true);z.setUint32(16,off,true);
+ const blob=new Blob([...parts,...cen,z.buffer],{type:'application/zip'});return {file:new File([blob],root+'.zip',{type:'application/zip'}),n:ent.length}}
+async function fbDeliver(file){try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return}}catch(e){if(e&&e.name==='AbortError')return}
+ const u=URL.createObjectURL(file),a=document.createElement('a');a.href=u;a.download=file.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),6e4)}
+
+/* ---- copia en tu Drive ---- */
+let fbBusy=0,fbProg='';
+function fbSyncTxt(){if(!FB.url)return `<span class="fk-dot off"></span>Solo en este iPhone · <u>Conectar con tu Drive</u>`;
+ const pend=FB.notes.reduce((s,n)=>s+n.files.filter(f=>!f.up).length,0);
+ if(fbBusy)return `<span class="fk-dot up"></span>Subiendo a tu Drive${fbProg?' · '+fbProg:''}`;
+ if(FB.err)return `<span class="fk-dot bad"></span>No se ha podido subir · se reintentará`;
+ if(pend||FB.notes.some(n=>n.dirty)||FB.del.length)return `<span class="fk-dot up"></span>${pend?pend+(pend===1?' archivo':' archivos')+' por subir':'Cambios por subir'}`;
+ return `<span class="fk-dot"></span>Guardado en tu Drive${FB.last?' · '+fbAgo(FB.last):''}`}
+function fbPaintSync(){const e=$('#fk-sync');if(e)e.innerHTML=fbSyncTxt()}
+async function fbApi(a,d,url,code){const r=await fetch(url||FB.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({a,c:code||FB.code},d||{})),redirect:'follow'});
+ let j;try{j=await r.json()}catch(e){throw new Error('El script no ha respondido bien (¿está implantado como aplicación web con acceso «Cualquiera»?)')}if(!j.ok)throw Object.assign(new Error(j.error||'Error del script'),{j});return j}
+const fbB64=blob=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]||'');r.onerror=()=>ko(r.error);r.readAsDataURL(blob)});
+async function fbSync(){if(!FB.url||fbBusy||!navigator.onLine)return fbPaintSync();fbBusy=1;FB.err='';fbProg='';fbPaintSync();
+ try{while(FB.del.length){await fbApi('borrar',{id:FB.del[0]});FB.del.shift();fbSave()}
+  for(const n of FB.notes.slice()){const nm=fbNames(n);
+   if(n.dirty){await fbApi('nota',{id:n.id,ts:n.ts,fecha:fbFull(n.ts),sec:n.sec,txt:n.txt,st:n.st==='h'?'Hecha':'Pendiente',ver:n.ver||'',arch:nm.join(', ')});n.dirty=0;n.sync=1;fbSave();fbPaintSync()}
+   for(let j=0;j<n.files.length;j++){const f=n.files[j];if(f.up)continue;if(!FB.notes.includes(n))break;const blob=await fbGet(f.k);if(!blob){f.up=1;fbSave();continue}
+    const s=await fbApi('ini',{id:n.id,sec:n.sec,name:nm[j],mime:f.mime,size:blob.size});let o=0;
+    while(o<blob.size){fbProg=`${nm[j]} · ${Math.round(o/blob.size*100)} %`;fbPaintSync();const ch=blob.slice(o,Math.min(blob.size,o+FB_CHUNK));
+     const r=await fbApi('trozo',{u:s.u,o,t:blob.size,mime:f.mime,b:await fbB64(ch)});if(r.done){o=blob.size;break}o=typeof r.next==='number'?r.next:o+ch.size}
+    f.up=1;fbSave()}}
+  FB.last=Date.now()}
+ catch(e){FB.err=String(e&&e.message||e)}
+ fbBusy=0;fbProg='';fbSave();fbPaintSync()}
+addEventListener('online',()=>{if(FB.url)fbSync()});
+setTimeout(()=>{if(FB.url&&(FB.notes.some(n=>n.dirty||n.files.some(f=>!f.up))||FB.del.length))fbSync()},6000);
+function fbDrive(){openSheet(`<h3>Copia en tu Drive</h3><div class="muted" style="font-size:14px;margin:-6px 0 14px">Las notas van a una hoja y las capturas y vídeos a la carpeta «ONboard · Feedback» de tu Drive. Pega el enlace del script de Feedback y el código que pusiste en sus Propiedades.</div>
+ <input class="srch fk-in" id="fv-u" placeholder="Enlace del script (termina en /exec)" value="${esc(FB.url)}" autocomplete="off" autocapitalize="off" spellcheck="false">
+ <input class="srch fk-in" id="fv-c" placeholder="Código" value="${esc(FB.code)}" autocomplete="off" autocapitalize="off" spellcheck="false" type="password">
+ <div class="muted" id="fv-m" style="font-size:13px;margin:4px 4px 14px">${FB.err?'Último error: '+esc(FB.err):FB.url?(FB.last?'Última subida: '+fbAgo(FB.last):'Conectado'):'Aún sin conectar. Mientras tanto, las notas se guardan en este iPhone.'}</div>
+ <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="mini fk-pri" id="fv-ok">Guardar y probar</button>${FB.url?'<button class="mini" id="fv-now">Subir ahora</button><button class="mini bd" id="fv-off">Desconectar</button>':''}</div>`,c=>{
+  const m=$('#fv-m',c);
+  $('#fv-ok',c).onclick=async()=>{const u=$('#fv-u',c).value.trim(),k=$('#fv-c',c).value.trim();if(!/^https:\/\/script\.google\.com\/.+\/exec$/.test(u)){m.textContent='El enlace tiene que empezar por https://script.google.com/ y terminar en /exec.';return}if(!k){m.textContent='Falta el código.';return}
+   m.textContent='Probando…';try{await fbApi('ping',{},u,k);FB.url=u;FB.code=k;FB.err='';FB.notes.forEach(n=>{if(!n.sync)n.dirty=1});fbSave();m.textContent='Conectado. Subiendo las notas…';fbRender();fbSync();setTimeout(closeSheet,900)}catch(e){m.textContent='No funciona: '+(e&&e.message||e)}};
+  const nw=$('#fv-now',c);if(nw)nw.onclick=()=>{closeSheet();FB.err='';fbSync()};
+  const off=$('#fv-off',c);if(off)off.onclick=()=>{if(!off.dataset.ok){off.dataset.ok=1;off.textContent='Pulsa otra vez';return}FB.url='';FB.code='';FB.err='';fbSave();closeSheet();fbRender()}})}
 /* ===== ONboard · MODO CLASE (pantalla del profesor y vista de alumnos) ===== */
 const CLQ=new URLSearchParams(location.search),CLSMODE=CLQ.has('clase')?'prof':CLQ.has('ver')?'ver':null;
 if(CLSMODE){
